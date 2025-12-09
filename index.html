@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canlı TV - Türkiye'nin Canlı TV Platformu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #0f4c75;
+            --highlight-color: #00b7c2;
+            --text-color: #f1f1f1;
+            --card-color: #222831;
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--secondary-color);
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--highlight-color);
+            font-size: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(to right, var(--highlight-color), #4cc9f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--highlight-color);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 8px 15px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-color);
+            width: 200px;
+            padding: 5px 10px;
+        }
+
+        .search-box button {
+            background: transparent;
+            border: none;
+            color: var(--highlight-color);
+            cursor: pointer;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .user-actions a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .user-actions a:hover {
+            color: var(--highlight-color);
+        }
+
+        /* Main Content */
+        main {
+            padding: 30px 0;
+        }
+
+        .player-section {
+            margin-bottom: 40px;
+        }
+
+        .player-container {
+            background-color: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(45deg, #111, #333);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .video-placeholder i {
+            font-size: 5rem;
+            color: var(--highlight-color);
+            margin-bottom: 20px;
+        }
+
+        .video-placeholder p {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        .live-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .channel-info {
+            background-color: var(--card-color);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .channel-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .channel-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--highlight-color);
+        }
+
+        .btn-fav {
+            background-color: transparent;
+            border: 1px solid var(--highlight-color);
+        }
+
+        /* Categories */
+        .categories {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--highlight-color);
+            color: var(--primary-color);
+        }
+
+        /* Channels Grid */
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .channel-card {
+            background-color: var(--card-color);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .channel-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .channel-logo {
+            height: 160px;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3.5rem;
+        }
+
+        .channel-content {
+            padding: 20px;
+        }
+
+        .channel-name {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .channel-category {
+            color: var(--highlight-color);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .channel-viewers {
+            color: #aaa;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary-color);
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--highlight-color);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--highlight-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Tasarım */
+        @media (max-width: 1100px) {
+            .channels-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 900px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .video-placeholder {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .video-placeholder {
+                height: 300px;
+            }
+            
+            .video-placeholder i {
+                font-size: 3.5rem;
+            }
+            
+            .channel-info {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .channel-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .channels-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-filters {
+                justify-content: center;
+            }
+            
+            .search-box input {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-tv"></i>
+                <h1>Canlı TV</h1>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                    <li><a href="#"><i class="fas fa-broadcast-tower"></i> Canlı Yayınlar</a></li>
+                    <li><a href="#"><i class="fas fa-film"></i> Diziler</a></li>
+                    <li><a href="#"><i class="fas fa-futbol"></i> Spor</a></li>
+                    <li><a href="#"><i class="fas fa-star"></i> Favorilerim</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-box">
+                <input type="text" placeholder="Kanal ara...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="user-actions">
+                <a href="#"><i class="fas fa-user"></i></a>
+                <a href="#"><i class="fas fa-cog"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Video Player -->
+        <section class="player-section">
+            <div class="player-container">
+                <div class="video-placeholder">
+                    <div class="live-indicator">
+                        <i class="fas fa-circle"></i> CANLI
+                    </div>
+                    <i class="fas fa-play-circle"></i>
+                    <p>Canlı yayını başlatmak için bir kanal seçin</p>
+                </div>
+                
+                <div class="channel-info">
+                    <div>
+                        <div class="channel-title">Şu an oynatılıyor: Kanal Seçilmedi</div>
+                        <p>Lütfen aşağıdan bir kanal seçerek yayını başlatın</p>
+                    </div>
+                    
+                    <div class="channel-actions">
+                        <button class="btn btn-fav"><i class="far fa-heart"></i> Favorilere Ekle</button>
+                        <button class="btn"><i class="fas fa-volume-up"></i> Ses Aç</button>
+                        <button class="btn"><i class="fas fa-expand"></i> Tam Ekran</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories & Channels -->
+        <section class="categories">
+            <h2 class="section-title">Kategoriler</h2>
+            
+            <div class="category-filters">
+                <button class="filter-btn active">Tümü</button>
+                <button class="filter-btn">Haber</button>
+                <button class="filter-btn">Spor</button>
+                <button class="filter-btn">Sinema</button>
+                <button class="filter-btn">Müzik</button>
+                <button class="filter-btn">Belgesel</button>
+                <button class="filter-btn">Çocuk</button>
+                <button class="filter-btn">Yerel</button>
+            </div>
+            
+            <h2 class="section-title">Popüler Kanallar</h2>
+            
+            <div class="channels-grid">
+                <!-- Kanal 1 -->
+                <div class="channel-card" data-channel="TRT 1" data-category="Haber" data-logo="TRT">
+                    <div class="channel-logo" style="background-color: #c00;">
+                        <i class="fas fa-tower-broadcast"></i>
+                    </div>
+                    <div class="channel-content">
+                        <div class="channel-name">TRT 1</div>
+                        <span class="channel-category">Haber & Gündem</span>
+                        <p>Ulusal yayın yapan Türkiye'nin ilk televizyon kanalı.</p>
+                        <div class="channel-viewers">
+                            <i class="fas fa-eye"></i> 45.2k izleyici
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kanal 2 -->
+                <div class="channel-card" data-channel="BeIN Sports" data-category="Spor" data-logo="BeIN">
+                    <div class="channel-logo" style="background-color: #0a3d62;">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                    <div class="channel-content">
+                        <div class="channel-name">BeIN Sports</div>
+                        <span class="channel-category">Spor</span>
+                        <p>Yerel ve uluslararası spor karşılaşmaları canlı yayın.</p>
+                        <div class="channel-viewers">
+                            <i class="fas fa-eye"></i> 78.5k izleyici
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kanal 3 -->
+                <div class="channel-card" data-channel="Star TV" data-category="Sinema" data-logo="Star">
+                    <div class="channel-logo" style="background-color: #1e3799;">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <div class="channel-content">
+                        <div class="channel-name">Star TV</div>
+                        <span class="channel-category">Sinema & Dizi</span>
+                        <p>Yerli ve yabancı filmler, güncel diziler.</p>
+                        <div class="channel-viewers">
+                            <i class="fas fa-eye"></i> 62.1k izleyici
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kanal 4 -->
+                <div class="channel-card" data-channel="Kral Pop TV" data-category="Müzik" data-logo="Kral">
+                    <div class="channel-logo" style="background-color: #6a89cc;">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="channel-content">
+                        <div class="channel-name">Kral Pop TV</div>
+                        <span class="channel-category">Müzik</span>
+                        <p>Yerli ve yabancı pop müzik, video klipler.</p>
+                        <div class="channel-viewers">
+                            <i class="fas fa-eye"></i> 28.7k izleyici
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kanal 5 -->
+                <div class="channel-card" data-channel="Cartoon Network" data-category="Çocuk" data-logo="CN">
+                    <div class="channel-logo" style="background-color: #ff9f1a;">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <div class="channel-content">
+                        <div class="channel-name">Cartoon Network</div>
+                        <span class="channel-category">Çocuk</span>
+                        <p>Çizgi filmler ve çocuk programları.</p>
+                        <div class="channel-viewers">
+                            <i class="fas fa-eye"></i> 35.4k izleyici
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kanal 6 -->
+                <div class="channel-card" data-channel="CNN Türk" data-category="Haber" data-logo="CNN">
+                    <div class="channel-logo" style="background-color: #cc0000;">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="channel-content">
+                        <div class="channel-name">CNN Türk</div>
+                        <span class="channel-category">Haber</span>
+                        <p>24 saat kesintisiz haber ve gündem programları.</p>
+                        <div class="channel-viewers">
+                            <i class="fas fa-eye"></i> 39.8k izleyici
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kanal 7 -->
+                <div class="channel-card" data-channel="Discovery Channel" data-category="Belgesel" data-logo="Discovery">
+                    <div class="channel-logo" style="background-color: #0b4f6c;">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <div class="channel-content">
+                        <div class="channel-name">Discovery Channel</div>
+                        <span class="channel-category">Belgesel</span>
+                        <p>Doğa, bilim ve teknoloji belgeselleri.</p>
+                        <div class="channel-viewers">
+                            <i class="fas fa-eye"></i> 22.3k izleyici
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kanal 8 -->
+                <div class="channel-card" data-channel="TV8" data-category="Eğlence" data-logo="TV8">
+                    <div class="channel-logo" style="background-color: #3c40c6;">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="channel-content">
+                        <div class="channel-name">TV8</div>
+                        <span class="channel-category">Eğlence</span>
+                        <p>Yarışmalar, eğlence programları ve diziler.</p>
+                        <div class="channel-viewers">
+                            <i class="fas fa-eye"></i> 55.6k izleyici
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Canlı TV</h3>
+                    <p>Türkiye'nin en kapsamlı canlı TV izleme platformu. Yüzlerce kanalı tek bir platformda buluşturuyoruz.</p>
+                    <div style="margin-top: 15px;">
+                        <a href="#" style="margin-right: 10px; font-size: 1.5rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="margin-right: 10px; font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="margin-right: 10px; font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="margin-right: 10px; font-size: 1.5rem;"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Hızlı Bağlantılar</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Ana Sayfa</a></li>
+                        <li><a href="#">Canlı Yayınlar</a></li>
+                        <li><a href="#">Spor Kanalları</a></li>
+                        <li><a href="#">Haber Kanalları</a></li>
+                        <li><a href="#">Favori Kanallarım</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Yardım</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">SSS</a></li>
+                        <li><a href="#">İletişim</a></li>
+                        <li><a href="#">Kullanım Koşulları</a></li>
+                        <li><a href="#">Gizlilik Politikası</a></li>
+                        <li><a href="#">Yardım Merkezi</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Bize Ulaşın</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> İstanbul, Türkiye</li>
+                        <li><i class="fas fa-phone"></i> +90 (212) 123 45 67</li>
+                        <li><i class="fas fa-envelope"></i> info@canlitv.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Canlı TV. Tüm hakları saklıdır.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Kanal kartlarına tıklanınca video player'ı güncelle
+        document.querySelectorAll('.channel-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const channelName = this.getAttribute('data-channel');
+                const channelCategory = this.getAttribute('data-category');
+                const channelLogo = this.getAttribute('data-logo');
+                
+                // Video player bilgilerini güncelle
+                document.querySelector('.channel-title').textContent = `Şu an oynatılıyor: ${channelName}`;
+                
+                // Video placeholder'ı güncelle
+                const videoPlaceholder = document.querySelector('.video-placeholder');
+                videoPlaceholder.innerHTML = `
+                    <div class="live-indicator">
+                        <i class="fas fa-circle"></i> CANLI
+                    </div>
+                    <div style="font-size: 4rem; color: #fff; margin-bottom: 10px;">${channelLogo}</div>
+                    <p style="font-size: 1.5rem; font-weight: bold;">${channelName}</p>
+                    <p>${channelCategory} kategorisinde canlı yayın</p>
+                    <div style="margin-top: 20px; display: flex; align-items: center; gap: 10px;">
+                        <div class="btn" style="background-color: #00b7c2;">
+                            <i class="fas fa-play"></i> Oynat
+                        </div>
+                        <div class="btn btn-fav">
+                            <i class="far fa-heart"></i> Favorilere Ekle
+                        </div>
+                    </div>
+                `;
+                
+                // Tüm kartlardan aktif sınıfını kaldır
+                document.querySelectorAll('.channel-card').forEach(c => {
+                    c.style.border = 'none';
+                });
+                
+                // Tıklanan karta border ekle
+                this.style.border = `3px solid var(--highlight-color)`;
+                
+                // Sayfayı yukarı kaydır
+                document.querySelector('.player-section').scrollIntoView({behavior: 'smooth'});
+            });
+        });
+        
+        // Kategori filtrelerine tıklanınca
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Tüm filtrelerden aktif sınıfını kaldır
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Tıklanan filtreye aktif sınıfını ekle
+                this.classList.add('active');
+                
+                const filter = this.textContent;
+                const channels = document.querySelectorAll('.channel-card');
+                
+                if (filter === 'Tümü') {
+                    // Tüm kanalları göster
+                    channels.forEach(channel => {
+                        channel.style.display = 'block';
+                    });
+                } else {
+                    // Seçili kategoriye göre filtrele
+                    channels.forEach(channel => {
+                        const category = channel.getAttribute('data-category');
+                        if (category === filter) {
+                            channel.style.display = 'block';
+                        } else {
+                            channel.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Arama kutusu işlevselliği
+        const searchInput = document.querySelector('.search-box input');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const channels = document.querySelectorAll('.channel-card');
+            
+            channels.forEach(channel => {
+                const channelName = channel.querySelector('.channel-name').textContent.toLowerCase();
+                const channelDesc = channel.querySelector('p').textContent.toLowerCase();
+                const channelCategory = channel.querySelector('.channel-category').textContent.toLowerCase();
+                
+                if (channelName.includes(searchTerm) || channelDesc.includes(searchTerm) || channelCategory.includes(searchTerm)) {
+                    channel.style.display = 'block';
+                } else {
+                    channel.style.display = 'none';
+                }
+            });
+        });
+        
+        // Favorilere ekle butonu işlevselliği
+        document.querySelector('.btn-fav').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                this.innerHTML = '<i class="fas fa-heart"></i> Favorilerden Çıkar';
+                this.style.backgroundColor = '#e74c3c';
+                this.style.borderColor = '#e74c3c';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                this.innerHTML = '<i class="far fa-heart"></i> Favorilere Ekle';
+                this.style.backgroundColor = 'transparent';
+                this.style.borderColor = 'var(--highlight-color)';
+            }
+        });
+        
+        // Sayfa yüklendiğinde rastgele bir kanal seç
+        window.addEventListener('load', function() {
+            const channels = document.querySelectorAll('.channel-card');
+            const randomChannel = channels[Math.floor(Math.random() * channels.length)];
+            randomChannel.click();
+        });
+    </script>
+</body>
+</html>
