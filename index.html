@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canlı TV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: #0f1419;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* HEADER */
+        header {
+            background: #1a2433;
+            padding: 15px 0;
+            border-bottom: 2px solid #00a8ff;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00a8ff;
+        }
+        
+        .admin-btn {
+            background: #00a8ff;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        /* ANA İÇERİK */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            margin: 20px 0 15px;
+            color: #00a8ff;
+            border-left: 4px solid #00a8ff;
+            padding-left: 10px;
+        }
+        
+        /* KANAL KARTLARI */
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .channel-card {
+            background: #1a2433;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #2a3444;
+        }
+        
+        .channel-card:hover {
+            transform: translateY(-3px);
+            border-color: #00a8ff;
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.2);
+        }
+        
+        .channel-logo {
+            width: 60px;
+            height: 60px;
+            background: #00a8ff;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .channel-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .channel-category {
+            font-size: 12px;
+            color: #8899aa;
+        }
+        
+        /* OYNATICI */
+        .player-container {
+            background: #1a2433;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid #2a3444;
+        }
+        
+        .player-header {
+            padding: 15px;
+            background: #2a3444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .video-placeholder {
+            height: 300px;
+            background: #0f1419;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8899aa;
+        }
+        
+        .video-placeholder i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #00a8ff;
+        }
+        
+        /* KATEGORİLER */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .category-btn {
+            padding: 8px 16px;
+            background: #2a3444;
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .category-btn.active {
+            background: #00a8ff;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: #1a2433;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 1px solid #2a3444;
+            text-align: center;
+            color: #8899aa;
+            font-size: 14px;
+        }
+        
+        /* ADMIN PANEL */
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+            background: #0f1419;
+        }
+        
+        .admin-nav {
+            background: #1a2433;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            border-bottom: 2px solid #00a8ff;
+        }
+        
+        .admin-nav button {
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        .admin-nav button.active {
+            background: #00a8ff;
+        }
+        
+        .admin-section {
+            display: none;
+            padding: 20px;
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+        
+        .data-table {
+            width: 100%;
+            background: #1a2433;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            background: #2a3444;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #2a3444;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .edit-btn {
+            background: #00a8ff;
+            color: white;
+        }
+        
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+        }
+        
+        .view-btn {
+            background: #4cd964;
+            color: white;
+        }
+        
+        .status-active {
+            color: #4cd964;
+            font-weight: bold;
+        }
+        
+        .status-inactive {
+            color: #ff9500;
+        }
+        
+        .status-banned {
+            color: #ff4757;
+        }
+        
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: #1a2433;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid #00a8ff;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            color: #00a8ff;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #8899aa;
+            font-size: 14px;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            background: #2a3444;
+            border: 1px solid #3a4454;
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #00a8ff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: #8899aa;
+            float: right;
+            cursor: pointer;
+            font-size: 20px;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+        }
+        
+        /* KULLANICI DETAY MODAL */
+        .user-details {
+            background: #2a3444;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .user-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #3a4454;
+        }
+        
+        .user-info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .user-info-label {
+            color: #8899aa;
+        }
+        
+        .user-info-value {
+            font-weight: bold;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .channel-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .admin-nav {
+                flex-wrap: wrap;
+            }
+            
+            .data-table {
+                font-size: 12px;
+            }
+            
+            .action-btn {
+                padding: 3px 6px;
+                font-size: 10px;
+                margin: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ANA SAYFA -->
+    <div id="mainApp">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">📺 Canlı TV</div>
+                    <button class="admin-btn" id="adminBtn">Yönetim Paneli</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content container">
+            <!-- Kategoriler -->
+            <div class="categories">
+                <button class="category-btn active" data-category="all">Tüm Kanallar</button>
+                <button class="category-btn" data-category="news">Haber</button>
+                <button class="category-btn" data-category="sport">Spor</button>
+                <button class="category-btn" data-category="entertainment">Eğlence</button>
+                <button class="category-btn" data-category="movie">Sinema</button>
+            </div>
+
+            <!-- Oynatıcı -->
+            <div class="player-container">
+                <div class="player-header">
+                    <div class="channel-info">
+                        <div class="channel-logo" id="currentLogo">TRT</div>
+                        <div>
+                            <div id="currentChannel">TRT 1</div>
+                            <small id="currentCategory">Haber</small>
+                        </div>
+                    </div>
+                    <button class="admin-btn" style="padding: 5px 10px; font-size: 12px;">
+                        Tam Ekran
+                    </button>
+                </div>
+                <div class="video-placeholder">
+                    <i>▶️</i>
+                    <h3 id="playerTitle">TRT 1 - Canlı Yayın</h3>
+                    <p>Yayın başlatıldı</p>
+                </div>
+            </div>
+
+            <!-- Popüler Kanallar -->
+            <h2 class="section-title">Popüler Kanallar</h2>
+            <div class="channel-grid" id="channelsContainer">
+                <!-- Kanallar buraya eklenecek -->
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>© 2023 Canlı TV - Tüm hakları saklıdır</p>
+                <p>Demo Uygulama</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-nav">
+            <button class="active" data-section="dashboard">Panel</button>
+            <button data-section="channels">Kanallar</button>
+            <button data-section="categories">Kategoriler</button>
+            <button data-section="users">Kullanıcılar</button>
+            <button id="adminLogout" style="margin-left: auto;">Çıkış</button>
+        </div>
+
+        <div class="container">
+            <!-- Dashboard -->
+            <div id="dashboard" class="admin-section active">
+                <h2>Yönetim Paneli</h2>
+                <p>Hoş geldiniz! Sistemi buradan yönetebilirsiniz.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="background: #1a2433; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; color: #00a8ff;" id="statChannels">12</div>
+                        <div>Kanal</div>
+                    </div>
+                    <div style="background: #1a2433; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; color: #4cd964;" id="statCategories">5</div>
+                        <div>Kategori</div>
+                    </div>
+                    <div style="background: #1a2433; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; color: #ff9500;" id="statUsers">156</div>
+                        <div>Kullanıcı</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kanallar -->
+            <div id="channels" class="admin-section">
+                <h2>Kanal Yönetimi</h2>
+                <button class="admin-btn" id="addChannelBtn" style="margin-bottom: 15px;">+ Yeni Kanal</button>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Kanal Adı</th>
+                            <th>Kategori</th>
+                            <th>Logo</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="channelsTable">
+                        <!-- Kanallar buraya eklenecek -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Kategoriler -->
+            <div id="categories" class="admin-section">
+                <h2>Kategori Yönetimi</h2>
+                <button class="admin-btn" id="addCategoryBtn" style="margin-bottom: 15px;">+ Yeni Kategori</button>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Kategori Adı</th>
+                            <th>Kanal Sayısı</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoriesTable">
+                        <!-- Kategoriler buraya eklenecek -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Kullanıcılar -->
+            <div id="users" class="admin-section">
+                <h2>Kullanıcı Yönetimi</h2>
+                <button class="admin-btn" id="addUserBtn" style="margin-bottom: 15px;">+ Yeni Kullanıcı</button>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Kullanıcı Adı</th>
+                            <th>E-posta</th>
+                            <th>Rol</th>
+                            <th>Durum</th>
+                            <th>Kayıt Tarihi</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable">
+                        <!-- Kullanıcılar buraya eklenecek -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALLAR -->
+    <!-- Giriş Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeLogin">×</button>
+            <div class="modal-header">
+                <h3>Yönetici Girişi</h3>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" id="username" placeholder="admin" required>
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="submit-btn">Giriş Yap</button>
+            </form>
+            <p style="text-align: center; margin-top: 15px; color: #8899aa; font-size: 12px;">
+                Demo: Kullanıcı: admin | Şifre: admin123
+            </p>
+        </div>
+    </div>
+
+    <!-- Kanal Modal -->
+    <div class="modal" id="channelModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeChannelModal">×</button>
+            <div class="modal-header">
+                <h3 id="channelModalTitle">Yeni Kanal Ekle</h3>
+            </div>
+            <form id="channelForm">
+                <div class="form-group">
+                    <label>Kanal Adı</label>
+                    <input type="text" id="channelName" placeholder="Örnek: TRT 1" required>
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="channelCategory" required>
+                        <option value="">Kategori Seçin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Logo (3 Harf)</label>
+                    <input type="text" id="channelLogo" placeholder="TRT" maxlength="3" required>
+                </div>
+                <div class="form-group">
+                    <label>Stream URL (Opsiyonel)</label>
+                    <input type="text" id="streamUrl" placeholder="https://">
+                </div>
+                <button type="submit" class="submit-btn">KAYDET</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kategori Modal -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeCategoryModal">×</button>
+            <div class="modal-header">
+                <h3>Yeni Kategori Ekle</h3>
+            </div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label>Kategori Adı</label>
+                    <input type="text" id="categoryName" placeholder="Örnek: Haber" required>
+                </div>
+                <button type="submit" class="submit-btn">KAYDET</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kullanıcı Modal -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeUserModal">×</button>
+            <div class="modal-header">
+                <h3 id="userModalTitle">Yeni Kullanıcı</h3>
+            </div>
+            <form id="userForm">
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" id="userUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>E-posta</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" id="userPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select id="userRole" required>
+                        <option value="user">Kullanıcı</option>
+                        <option value="moderator">Moderatör</option>
+                        <option value="admin">Yönetici</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Durum</label>
+                    <select id="userStatus" required>
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Pasif</option>
+                        <option value="banned">Yasaklı</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">KAYDET</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kullanıcı Detay Modal -->
+    <div class="modal" id="userDetailModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="close-btn" id="closeUserDetailModal">×</button>
+            <div class="modal-header">
+                <h3>Kullanıcı Detayları</h3>
+            </div>
+            <div id="userDetailContent">
+                <!-- Kullanıcı detayları buraya eklenecek -->
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="action-btn edit-btn" id="editUserDetailBtn">Düzenle</button>
+                <button class="action-btn delete-btn" id="deleteUserDetailBtn">Sil</button>
+                <button class="action-btn" id="changeStatusBtn" style="background: #ff9500; color: white;">Durum Değiştir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // VERİ DEPOLAMA
+        let appData = {
+            channels: [
+                {id: 1, name: "TRT 1", category: "news", logo: "TRT", url: ""},
+                {id: 2, name: "Show TV", category: "entertainment", logo: "SHW", url: ""},
+                {id: 3, name: "ATV", category: "entertainment", logo: "ATV", url: ""},
+                {id: 4, name: "FOX", category: "entertainment", logo: "FOX", url: ""}
+            ],
+            categories: [
+                {id: 1, name: "Haber", key: "news", count: 1},
+                {id: 2, name: "Spor", key: "sport", count: 0},
+                {id: 3, name: "Eğlence", key: "entertainment", count: 3}
+            ],
+            users: [
+                {id: 1, username: "admin", email: "admin@canlitv.com", role: "admin", status: "active", 
+                 created: "2023-01-15", lastLogin: "2023-12-01 14:30:00"},
+                {id: 2, username: "moderator", email: "mod@canlitv.com", role: "moderator", status: "active", 
+                 created: "2023-02-20", lastLogin: "2023-11-28 09:15:00"},
+                {id: 3, username: "john_doe", email: "john@example.com", role: "user", status: "active", 
+                 created: "2023-03-10", lastLogin: "2023-11-30 16:45:00"},
+                {id: 4, username: "jane_smith", email: "jane@example.com", role: "user", status: "inactive", 
+                 created: "2023-04-05", lastLogin: "2023-10-15 11:20:00"}
+            ]
+        };
+
+        // DEĞİŞKENLER
+        let currentEditingId = null;
+        let currentViewingUserId = null;
+
+        // SAYFA YÜKLENDİĞİNDE
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHomePage();
+            setupEventListeners();
+            selectFirstChannel();
+        });
+
+        // ANA SAYFA YÜKLE
+        function loadHomePage() {
+            const container = document.getElementById('channelsContainer');
+            container.innerHTML = '';
+            
+            appData.channels.forEach(channel => {
+                const categoryName = getCategoryName(channel.category);
+                const card = document.createElement('div');
+                card.className = 'channel-card';
+                card.dataset.category = channel.category;
+                card.innerHTML = `
+                    <div class="channel-logo">${channel.logo}</div>
+                    <div class="channel-name">${channel.name}</div>
+                    <div class="channel-category">${categoryName}</div>
+                `;
+                card.onclick = () => selectChannel(channel);
+                container.appendChild(card);
+            });
+            
+            updateStats();
+        }
+
+        // KATEGORİ ADINI AL
+        function getCategoryName(key) {
+            const cat = appData.categories.find(c => c.key === key);
+            return cat ? cat.name : key;
+        }
+
+        // ROL ADINI AL
+        function getRoleName(key) {
+            const roles = {
+                'admin': 'Yönetici',
+                'moderator': 'Moderatör',
+                'user': 'Kullanıcı'
+            };
+            return roles[key] || key;
+        }
+
+        // DURUM ADINI AL
+        function getStatusName(key) {
+            const statuses = {
+                'active': 'Aktif',
+                'inactive': 'Pasif',
+                'banned': 'Yasaklı'
+            };
+            return statuses[key] || key;
+        }
+
+        // DURUM SİNİFINI AL
+        function getStatusClass(key) {
+            const classes = {
+                'active': 'status-active',
+                'inactive': 'status-inactive',
+                'banned': 'status-banned'
+            };
+            return classes[key] || '';
+        }
+
+        // İSTATİSTİKLERİ GÜNCELLE
+        function updateStats() {
+            document.getElementById('statChannels').textContent = appData.channels.length;
+            document.getElementById('statCategories').textContent = appData.categories.length;
+            document.getElementById('statUsers').textContent = appData.users.length;
+        }
+
+        // KANAL SEÇ
+        function selectChannel(channel) {
+            const categoryName = getCategoryName(channel.category);
+            
+            document.getElementById('currentLogo').textContent = channel.logo;
+            document.getElementById('currentChannel').textContent = channel.name;
+            document.getElementById('currentCategory').textContent = categoryName;
+            document.getElementById('playerTitle').textContent = `${channel.name} - Canlı Yayın`;
+            
+            // Seçili kanalı vurgula
+            document.querySelectorAll('.channel-card').forEach(card => {
+                card.style.borderColor = '#2a3444';
+            });
+            event.currentTarget.style.borderColor = '#00a8ff';
+        }
+
+        // İLK KANALI SEÇ
+        function selectFirstChannel() {
+            if (appData.channels.length > 0) {
+                selectChannel(appData.channels[0]);
+            }
+        }
+
+        // KATEGORİ FİLTRELE
+        function setupCategoryFilters() {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.onclick = function() {
+                    // Tüm butonlardan active classını kaldır
+                    document.querySelectorAll('.category-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Tıklanan butona active classını ekle
+                    this.classList.add('active');
+                    
+                    const category = this.dataset.category;
+                    filterChannels(category);
+                };
+            });
+        }
+
+        function filterChannels(category) {
+            const cards = document.querySelectorAll('.channel-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // ADMIN PANELİ YÜKLE
+        function loadAdminPanel() {
+            loadAdminChannels();
+            loadAdminCategories();
+            loadAdminUsers();
+            updateStats();
+        }
+
+        function loadAdminChannels() {
+            const tbody = document.getElementById('channelsTable');
+            tbody.innerHTML = '';
+            
+            appData.channels.forEach(channel => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${channel.name}</td>
+                    <td>${getCategoryName(channel.category)}</td>
+                    <td>${channel.logo}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editChannel(${channel.id})">Düzenle</button>
+                        <button class="action-btn delete-btn" onclick="deleteChannel(${channel.id})">Sil</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function loadAdminCategories() {
+            const tbody = document.getElementById('categoriesTable');
+            tbody.innerHTML = '';
+            
+            appData.categories.forEach(category => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${category.name}</td>
+                    <td>${category.count} kanal</td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="deleteCategory(${category.id})">Sil</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function loadAdminUsers() {
+            const tbody = document.getElementById('usersTable');
+            tbody.innerHTML = '';
+            
+            appData.users.forEach(user => {
+                const statusClass = getStatusClass(user.status);
+                const statusName = getStatusName(user.status);
+                const roleName = getRoleName(user.role);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${roleName}</td>
+                    <td class="${statusClass}">${statusName}</td>
+                    <td>${user.created}</td>
+                    <td>
+                        <button class="action-btn view-btn" onclick="viewUserDetails(${user.id})">Görüntüle</button>
+                        <button class="action-btn edit-btn" onclick="editUser(${user.id})">Düzenle</button>
+                        <button class="action-btn delete-btn" onclick="deleteUser(${user.id})">Sil</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // KULLANICI DETAYLARINI GÖSTER
+        function viewUserDetails(userId) {
+            const user = appData.users.find(u => u.id === userId);
+            if (!user) return;
+            
+            currentViewingUserId = userId;
+            
+            const roleName = getRoleName(user.role);
+            const statusName = getStatusName(user.status);
+            const statusClass = getStatusClass(user.status);
+            
+            document.getElementById('userDetailContent').innerHTML = `
+                <div class="user-details">
+                    <div class="user-info-row">
+                        <span class="user-info-label">Kullanıcı ID:</span>
+                        <span class="user-info-value">${user.id}</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="user-info-label">Kullanıcı Adı:</span>
+                        <span class="user-info-value">${user.username}</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="user-info-label">E-posta:</span>
+                        <span class="user-info-value">${user.email}</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="user-info-label">Rol:</span>
+                        <span class="user-info-value">${roleName}</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="user-info-label">Durum:</span>
+                        <span class="user-info-value ${statusClass}">${statusName}</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="user-info-label">Kayıt Tarihi:</span>
+                        <span class="user-info-value">${user.created}</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="user-info-label">Son Giriş:</span>
+                        <span class="user-info-value">${user.lastLogin || 'Bilinmiyor'}</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="user-info-label">Kullanıcı Tipi:</span>
+                        <span class="user-info-value">${user.role === 'admin' ? 'Yönetici' : user.role === 'moderator' ? 'Moderatör' : 'Standart Kullanıcı'}</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('userDetailModal').style.display = 'flex';
+        }
+
+        // YENİ KANAL EKLE
+        function openChannelModal(isEdit = false, channelId = null) {
+            currentEditingId = channelId;
+            
+            // Kategori seçeneklerini doldur
+            const select = document.getElementById('channelCategory');
+            select.innerHTML = '<option value="">Kategori Seçin</option>';
+            appData.categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.key;
+                option.textContent = category.name;
+                select.appendChild(option);
+            });
+            
+            if (isEdit && channelId) {
+                const channel = appData.channels.find(c => c.id === channelId);
+                if (channel) {
+                    document.getElementById('channelModalTitle').textContent = 'Kanalı Düzenle';
+                    document.getElementById('channelName').value = channel.name;
+                    document.getElementById('channelCategory').value = channel.category;
+                    document.getElementById('channelLogo').value = channel.logo;
+                    document.getElementById('streamUrl').value = channel.url || '';
+                }
+            } else {
+                document.getElementById('channelModalTitle').textContent = 'Yeni Kanal Ekle';
+                document.getElementById('channelForm').reset();
+            }
+            
+            document.getElementById('channelModal').style.display = 'flex';
+        }
+
+        function saveChannel() {
+            const name = document.getElementById('channelName').value.trim();
+            const category = document.getElementById('channelCategory').value;
+            const logo = document.getElementById('channelLogo').value.trim().toUpperCase();
+            const url = document.getElementById('streamUrl').value.trim();
+            
+            if (!name || !category || !logo) {
+                alert('Lütfen tüm zorunlu alanları doldurun!');
+                return;
+            }
+            
+            if (currentEditingId) {
+                // Düzenleme
+                const index = appData.channels.findIndex(c => c.id === currentEditingId);
+                if (index !== -1) {
+                    appData.channels[index] = {
+                        ...appData.channels[index],
+                        name: name,
+                        category: category,
+                        logo: logo,
+                        url: url
+                    };
+                }
+            } else {
+                // Yeni ekleme
+                const newId = appData.channels.length > 0 ? Math.max(...appData.channels.map(c => c.id)) + 1 : 1;
+                appData.channels.push({
+                    id: newId,
+                    name: name,
+                    category: category,
+                    logo: logo,
+                    url: url
+                });
+            }
+            
+            // Kategori sayılarını güncelle
+            updateCategoryCounts();
+            
+            // Sayfaları yenile
+            loadAdminChannels();
+            loadHomePage();
+            updateStats();
+            
+            // Modalı kapat
+            document.getElementById('channelModal').style.display = 'none';
+            
+            alert(currentEditingId ? 'Kanal güncellendi!' : 'Yeni kanal eklendi!');
+            currentEditingId = null;
+        }
+
+        // KATEGORİ SAYILARINI GÜNCELLE
+        function updateCategoryCounts() {
+            appData.categories.forEach(category => {
+                category.count = appData.channels.filter(c => c.category === category.key).length;
+            });
+        }
+
+        // KANAL DÜZENLE/SİL
+        function editChannel(id) {
+            openChannelModal(true, id);
+        }
+
+        function deleteChannel(id) {
+            if (confirm('Bu kanalı silmek istediğinize emin misiniz?')) {
+                appData.channels = appData.channels.filter(c => c.id !== id);
+                updateCategoryCounts();
+                loadAdminChannels();
+                loadHomePage();
+                updateStats();
+                alert('Kanal silindi!');
+            }
+        }
+
+        // KATEGORİ İŞLEMLERİ
+        function openCategoryModal() {
+            document.getElementById('categoryName').value = '';
+            document.getElementById('categoryModal').style.display = 'flex';
+        }
+
+        function saveCategory() {
+            const name = document.getElementById('categoryName').value.trim();
+            
+            if (!name) {
+                alert('Lütfen kategori adı girin!');
+                return;
+            }
+            
+            const key = name.toLowerCase().replace(/\s+/g, '_');
+            
+            // Aynı isimde kategori kontrolü
+            const existingCategory = appData.categories.find(c => c.key === key);
+            if (existingCategory) {
+                alert('Bu isimde bir kategori zaten mevcut!');
+                return;
+            }
+            
+            const newId = appData.categories.length > 0 ? Math.max(...appData.categories.map(c => c.id)) + 1 : 1;
+            appData.categories.push({
+                id: newId,
+                name: name,
+                key: key,
+                count: 0
+            });
+            
+            loadAdminCategories();
+            updateStats();
+            document.getElementById('categoryModal').style.display = 'none';
+            alert('Yeni kategori eklendi!');
+        }
+
+        function deleteCategory(id) {
+            const category = appData.categories.find(c => c.id === id);
+            if (category.count > 0) {
+                alert('Bu kategoriyi silemezsiniz! Kategoriye bağlı kanallar var.');
+                return;
+            }
+            
+            if (confirm('Bu kategoriyi silmek istediğinize emin misiniz?')) {
+                appData.categories = appData.categories.filter(c => c.id !== id);
+                loadAdminCategories();
+                updateStats();
+                alert('Kategori silindi!');
+            }
+        }
+
+        // KULLANICI İŞLEMLERİ
+        function openUserModal(isEdit = false, userId = null) {
+            currentEditingId = userId;
+            
+            if (isEdit && userId) {
+                const user = appData.users.find(u => u.id === userId);
+                if (user) {
+                    document.getElementById('userModalTitle').textContent = 'Kullanıcıyı Düzenle';
+                    document.getElementById('userUsername').value = user.username;
+                    document.getElementById('userEmail').value = user.email;
+                    document.getElementById('userRole').value = user.role;
+                    document.getElementById('userStatus').value = user.status;
+                    document.getElementById('userPassword').required = false;
+                }
+            } else {
+                document.getElementById('userModalTitle').textContent = 'Yeni Kullanıcı';
+                document.getElementById('userForm').reset();
+                document.getElementById('userPassword').required = true;
+            }
+            
+            document.getElementById('userModal').style.display = 'flex';
+        }
+
+        function saveUser() {
+            const username = document.getElementById('userUsername').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            const password = document.getElementById('userPassword').value;
+            const role = document.getElementById('userRole').value;
+            const status = document.getElementById('userStatus').value;
+            
+            if (!username || !email || (!currentEditingId && !password)) {
+                alert('Lütfen tüm zorunlu alanları doldurun!');
+                return;
+            }
+            
+            if (currentEditingId) {
+                // Düzenleme
+                const index = appData.users.findIndex(u => u.id === currentEditingId);
+                if (index !== -1) {
+                    const updatedUser = {
+                        ...appData.users[index],
+                        username: username,
+                        email: email,
+                        role: role,
+                        status: status
+                    };
+                    
+                    // Eğer şifre girilmişse güncelle
+                    if (password) {
+                        updatedUser.password = password;
+                    }
+                    
+                    appData.users[index] = updatedUser;
+                }
+            } else {
+                // Yeni ekleme
+                const newId = appData.users.length > 0 ? Math.max(...appData.users.map(u => u.id)) + 1 : 1;
+                const currentDate = new Date().toISOString().split('T')[0];
+                
+                appData.users.push({
+                    id: newId,
+                    username: username,
+                    email: email,
+                    password: password,
+                    role: role,
+                    status: status,
+                    created: currentDate,
+                    lastLogin: null
+                });
+            }
+            
+            loadAdminUsers();
+            updateStats();
+            document.getElementById('userModal').style.display = 'none';
+            
+            alert(currentEditingId ? 'Kullanıcı güncellendi!' : 'Yeni kullanıcı eklendi!');
+            currentEditingId = null;
+        }
+
+        function editUser(id) {
+            openUserModal(true, id);
+        }
+
+        function deleteUser(id) {
+            const user = appData.users.find(u => u.id === id);
+            if (!user) return;
+            
+            if (user.role === 'admin') {
+                alert('Yönetici kullanıcılar silinemez!');
+                return;
+            }
+            
+            if (confirm(`${user.username} kullanıcısını silmek istediğinize emin misiniz?`)) {
+                appData.users = appData.users.filter(u => u.id !== id);
+                loadAdminUsers();
+                updateStats();
+                alert('Kullanıcı silindi!');
+            }
+        }
+
+        function toggleUserStatus() {
+            if (!currentViewingUserId) return;
+            
+            const user = appData.users.find(u => u.id === currentViewingUserId);
+            if (!user) return;
+            
+            if (user.role === 'admin') {
+                alert('Yönetici kullanıcıların durumu değiştirilemez!');
+                return;
+            }
+            
+            const newStatus = user.status === 'active' ? 'inactive' : 
+                             user.status === 'inactive' ? 'banned' : 'active';
+            
+            user.status = newStatus;
+            loadAdminUsers();
+            
+            // Detay modalını yenile
+            viewUserDetails(currentViewingUserId);
+            
+            alert(`Kullanıcı durumu "${getStatusName(newStatus)}" olarak değiştirildi!`);
+        }
+
+        // OLAY DİNLEYİCİLERİ
+        function setupEventListeners() {
+            // Ana sayfa kategori filtreleri
+            setupCategoryFilters();
+            
+            // Admin giriş butonu
+            document.getElementById('adminBtn').onclick = function() {
+                document.getElementById('loginModal').style.display = 'flex';
+            };
+            
+            // Giriş formu
+            document.getElementById('loginForm').onsubmit = function(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if (username === 'admin' && password === 'admin123') {
+                    document.getElementById('loginModal').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    loadAdminPanel();
+                } else {
+                    alert('Hatalı giriş! Demo: admin / admin123');
+                }
+            };
+            
+            // Çıkış butonu
+            document.getElementById('adminLogout').onclick = function() {
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+            };
+            
+            // Admin navigasyon
+            document.querySelectorAll('.admin-nav button[data-section]').forEach(btn => {
+                btn.onclick = function() {
+                    // Tüm butonlardan active classını kaldır
+                    document.querySelectorAll('.admin-nav button').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Tıklanan butona active classını ekle
+                    this.classList.add('active');
+                    
+                    // Tüm bölümleri gizle
+                    document.querySelectorAll('.admin-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // İlgili bölümü göster
+                    const sectionId = this.dataset.section;
+                    document.getElementById(sectionId).classList.add('active');
+                };
+            });
+            
+            // Yeni kanal butonu
+            document.getElementById('addChannelBtn').onclick = function() {
+                openChannelModal(false);
+            };
+            
+            // Kanal formu
+            document.getElementById('channelForm').onsubmit = function(e) {
+                e.preventDefault();
+                saveChannel();
+            };
+            
+            // Yeni kategori butonu
+            document.getElementById('addCategoryBtn').onclick = function() {
+                openCategoryModal();
+            };
+            
+            // Kategori formu
+            document.getElementById('categoryForm').onsubmit = function(e) {
+                e.preventDefault();
+                saveCategory();
+            };
+            
+            // Yeni kullanıcı butonu
+            document.getElementById('addUserBtn').onclick = function() {
+                openUserModal(false);
+            };
+            
+            // Kullanıcı formu
+            document.getElementById('userForm').onsubmit = function(e) {
+                e.preventDefault();
+                saveUser();
+            };
+            
+            // Kullanıcı detay modal butonları
+            document.getElementById('editUserDetailBtn').onclick = function() {
+                if (currentViewingUserId) {
+                    document.getElementById('userDetailModal').style.display = 'none';
+                    setTimeout(() => editUser(currentViewingUserId), 300);
+                }
+            };
+            
+            document.getElementById('deleteUserDetailBtn').onclick = function() {
+                if (currentViewingUserId) {
+                    document.getElementById('userDetailModal').style.display = 'none';
+                    setTimeout(() => deleteUser(currentViewingUserId), 300);
+                }
+            };
+            
+            document.getElementById('changeStatusBtn').onclick = function() {
+                toggleUserStatus();
+            };
+            
+            // Modal kapatma butonları
+            document.getElementById('closeLogin').onclick = function() {
+                document.getElementById('loginModal').style.display = 'none';
+            };
+            
+            document.getElementById('closeChannelModal').onclick = function() {
+                document.getElementById('channelModal').style.display = 'none';
+                currentEditingId = null;
+            };
+            
+            document.getElementById('closeCategoryModal').onclick = function() {
+                document.getElementById('categoryModal').style.display = 'none';
+            };
+            
+            document.getElementById('closeUserModal').onclick = function() {
+                document.getElementById('userModal').style.display = 'none';
+                currentEditingId = null;
+            };
+            
+            document.getElementById('closeUserDetailModal').onclick = function() {
+                document.getElementById('userDetailModal').style.display = 'none';
+                currentViewingUserId = null;
+            };
+            
+            // Modal dışına tıklayınca kapat
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.onclick = function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                        currentEditingId = null;
+                        currentViewingUserId = null;
+                    }
+                };
+            });
+        }
+    </script>
+</body>
+</html>
