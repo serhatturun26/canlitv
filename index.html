@@ -1654,9 +1654,10 @@
                         <button class="header-btn" id="helpBtn">
                             <span>❓</span> Yardım
                         </button>
-                        <button class="header-btn primary" id="adminBtn">
+                        <!-- ADMIN BUTONU KALDIRILDI -->
+                        <!-- <button class="header-btn primary" id="adminBtn">
                             <span>⚙️</span> Yönetim Paneli
-                        </button>
+                        </button> -->
                     </div>
                 </div>
             </div>
@@ -1712,7 +1713,7 @@
                 <!-- Video Player -->
                 <div id="videoPlayer">
                     <video id="myVideo" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%" 
-                           poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIHZpZXdCb3g9IjAgMCAxMjgwIDcyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIGZpbGw9IiMxQTI0MzMiLz48cGF0aCBkPSJNNjQwIDI4MEM1MTAgMjgwIDQwMCAzOTAgNDAwIDUyMFM1MTAgNzYwIDY0MCA3NjAgODgwIDY1MCA4ODAgNTIwIDc3MCAyODAgNjQwIDI4MFptMCAzNjBjLTk5LjQgMC0xODAtODAuNi0xODAtMTgwUzU0MC42IDI4MCA2NDAgMjgwIDE4MCAzNjAuNiAxODAgNDYwIDI1OC40IDY0MCA2NDAgNjQwWiIgZmlsbD0iIzM5NDQ1NCIvPjxwYXRoIGQ9Ik01NDQgNDE2Yy02LjYtNi42LTE3LjQtNi42LTI0IDBsLTk2IDk2Yy02LjYgNi42LTYuNiAxNy40IDAgMjRsOTYgOTZjNi42IDYuNiAxNy40IDYuNiAyNCAwbDk2LTk2YzYuNi02LjYgNi42LTE3LjQgMC0yNGwtOTYtOTZaIiBmaWxsPSIjMDBBOEZGIi8+PC9zdmc+">
+                           poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIHZpZXdCb3g9IjAgMCAxMjgwIDcyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIGZpbGw9IiMxQTI0MzMiLz48cGF0aCBkPSJNNjQwIDI4MEM1MTAgMjgwIDQwMCAzOTAgNDAwIDUyMFM1MTAgNzYwIDY0MCA3NjAgODgwIDY1MCA4ODAgNTIwIDc3MCAyODAgNjQwIDI4MFptMCAzNjBjLTk5LjQgMC0xODAtODAuNi0xODAtMTgwUzU0MC42IDI4MCA2NDAgMjgwIDE4MCAzNjAuNiAxODAgNDYwIDI1OC40IDY0MCA2NDAgNjQwWiIgZmlsbD0iIzM5NDQ1NCIvPjxwYXRoIGQ9Ik01NDQgNDE2Yy02LjYtNi42LTE3LjQtNi42LTI0IDBsLTk2IDk2Yy02LjYgNi42LTYuNiAxNy40IDAgMjRsOTYgOTZjNi42IDYuNiAxNy40IDYuNiAyNCAwbDk2LTk2YzYuNi02LjYgNi2LTE3LjQgMC0yNGwtOTYtOTZaIiBmaWxsPSIjMDBBOEZGIi8+PC9zdmc+">
                         <source id="videoSource" src="" type="application/x-mpegURL">
                         <p class="vjs-no-js">
                             Tarayıcınız video etiketini desteklemiyor. Lütfen güncel bir tarayıcı kullanın.
@@ -1990,31 +1991,10 @@
     </div>
 
     <!-- MODALLAR -->
-    <!-- Giriş Modal -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <button class="close-btn" id="closeLogin" aria-label="Kapat">×</button>
-            <div class="modal-header">
-                <h3>Yönetici Girişi</h3>
-            </div>
-            <form id="loginForm">
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label style="color: #ffffff; font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block;">Kullanıcı Adı</label>
-                    <input type="text" id="username" placeholder="admin" required style="width: 100%; padding: 15px; background: #2a3444; border: 2px solid #3a4454; border-radius: 12px; color: white; font-size: 16px;">
-                </div>
-                <div class="form-group" style="margin-bottom: 25px;">
-                    <label style="color: #ffffff; font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block;">Şifre</label>
-                    <input type="password" id="password" placeholder="••••••••" required style="width: 100%; padding: 15px; background: #2a3444; border: 2px solid #3a4454; border-radius: 12px; color: white; font-size: 16px;">
-                </div>
-                <button type="submit" class="header-btn primary" style="width: 100%; padding: 18px; font-size: 17px;">
-                    <span>🔑</span> Giriş Yap
-                </button>
-            </form>
-            <p style="text-align: center; margin-top: 25px; color: #ffffff; font-size: 14px;">
-                Demo: Kullanıcı: <strong>admin</strong> | Şifre: <strong>admin123</strong>
-            </p>
-        </div>
-    </div>
+    <!-- Giriş Modal (KALDIRILDI) -->
+    <!-- <div class="modal" id="loginModal">
+        ... login modal içeriği ...
+    </div> -->
 
     <!-- Kanal Modal -->
     <div class="modal" id="channelModal">
@@ -2147,7 +2127,7 @@
                 
                 <h4 style="color: #00a8ff; margin-bottom: 15px; font-size: 18px;">⚙️ Yönetici Paneli:</h4>
                 <p style="color: #ffffff; margin-bottom: 15px;">
-                    Demo giriş bilgileri: Kullanıcı: <strong>admin</strong> | Şifre: <strong>admin123</strong>
+                    Admin paneline erişmek için URL'ye <strong>?admin=canlitvpro2024</strong> parametresini ekleyin.
                 </p>
                 <p style="color: #ffffff; font-size: 14px; text-align: center; margin-top: 25px;">
                     Daha fazla yardım için: support@canlitvpro.com
@@ -2205,31 +2185,55 @@
         let isRepeating = false;
         let favorites = new Set();
 
+        // URL PARAMETRESİ İLE ADMIN ERİŞİMİ KONTROLÜ
+        function checkUrlForAdminAccess() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const adminToken = urlParams.get('admin');
+            
+            // Admin token kontrolü
+            if (adminToken === 'canlitvpro2024') {
+                // Admin panelini göster
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadAdminPanel();
+                showNotification('Yönetici paneline hoş geldiniz!', 'success');
+                
+                // URL'den parametreyi temizle (güvenlik için)
+                history.replaceState(null, '', window.location.pathname);
+                
+                return true;
+            }
+            return false;
+        }
+
         // SAYFA YÜKLENDİĞİNDE
         document.addEventListener('DOMContentLoaded', function() {
-            // Sayfaları yükle
-            loadHomePage();
-            setupEventListeners();
-            initializeVideoPlayer();
-            
-            // İlk kanalı seç
-            if (appData.channels.length > 0) {
-                selectChannel(appData.channels[0]);
+            // Önce URL'de admin parametresi var mı kontrol et
+            if (!checkUrlForAdminAccess()) {
+                // Normal kullanıcı arayüzünü yükle
+                loadHomePage();
+                setupEventListeners();
+                initializeVideoPlayer();
+                
+                // İlk kanalı seç
+                if (appData.channels.length > 0) {
+                    selectChannel(appData.channels[0]);
+                }
+                
+                // İstatistikleri güncelle
+                updateStats();
+                
+                // Responsive optimizasyonları başlat
+                detectDeviceAndOptimize();
+                checkNetworkConnection();
+                checkBatteryStatus();
+                optimizePageLoad();
+                
+                // Başlangıç bildirimi
+                setTimeout(() => {
+                    showNotification('Canlı TV Pro hazır! Kanal seçerek izlemeye başlayın.', 'info');
+                }, 1500);
             }
-            
-            // İstatistikleri güncelle
-            updateStats();
-            
-            // Responsive optimizasyonları başlat
-            detectDeviceAndOptimize();
-            checkNetworkConnection();
-            checkBatteryStatus();
-            optimizePageLoad();
-            
-            // Başlangıç bildirimi
-            setTimeout(() => {
-                showNotification('Canlı TV Pro hazır! Kanal seçerek izlemeye başlayın.', 'info');
-            }, 1500);
         });
 
         // VİDEO PLAYER'I BAŞLAT
@@ -3530,7 +3534,7 @@
             });
         }
 
-        // OLAY DİNLEYİCİLERİ
+        // OLAY DİNLEYİCİLERİ (GÜNCELLENMİŞ)
         function setupEventListeners() {
             // Ana sayfa kategori filtreleri
             setupCategoryFilters();
@@ -3550,40 +3554,20 @@
             // Yardım butonu
             document.getElementById('helpBtn').onclick = showHelpModal;
             
-            // Admin giriş butonu
-            document.getElementById('adminBtn').onclick = function() {
-                document.getElementById('loginModal').style.display = 'flex';
-            };
-            
-            // Giriş formu
-            document.getElementById('loginForm').onsubmit = function(e) {
-                e.preventDefault();
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                const user = appData.users.find(u => 
-                    u.username === username && u.password === password
-                );
-                
-                if (user) {
-                    document.getElementById('loginModal').style.display = 'none';
-                    document.getElementById('mainApp').style.display = 'none';
-                    document.getElementById('adminPanel').style.display = 'block';
-                    loadAdminPanel();
-                    showNotification('Yönetici paneline hoş geldiniz!', 'success');
-                    
-                    user.lastLogin = new Date().toLocaleString('tr-TR');
-                } else {
-                    showNotification('Hatalı giriş! Demo: admin / admin123', 'error');
-                }
-            };
-            
-            // Çıkış butonu
-            document.getElementById('adminLogout').onclick = function() {
-                document.getElementById('adminPanel').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'block';
-                showNotification('Başarıyla çıkış yapıldı.', 'info');
-            };
+            // Admin çıkış butonu (admin panelinde)
+            const adminLogoutBtn = document.getElementById('adminLogout');
+            if (adminLogoutBtn) {
+                adminLogoutBtn.onclick = function() {
+                    document.getElementById('adminPanel').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'block';
+                    showNotification('Başarıyla çıkış yapıldı. Tekrar giriş için URL parametresi kullanın.', 'info');
+                    // Ana sayfayı yenile
+                    loadHomePage();
+                    if (videoPlayer) {
+                        videoPlayer.pause();
+                    }
+                };
+            }
             
             // Admin navigasyon
             document.querySelectorAll('.admin-nav button[data-section]').forEach(btn => {
@@ -3619,73 +3603,108 @@
             });
             
             // Hızlı erişim butonları
-            document.getElementById('quickAddChannel').onclick = function() {
-                openChannelModal(false);
-            };
+            const quickAddChannel = document.getElementById('quickAddChannel');
+            if (quickAddChannel) {
+                quickAddChannel.onclick = function() {
+                    openChannelModal(false);
+                };
+            }
             
-            document.getElementById('quickAddCategory').onclick = function() {
-                openCategoryModal();
-            };
+            const quickAddCategory = document.getElementById('quickAddCategory');
+            if (quickAddCategory) {
+                quickAddCategory.onclick = function() {
+                    openCategoryModal();
+                };
+            }
             
-            document.getElementById('quickAddUser').onclick = function() {
-                openUserModal(false);
-            };
+            const quickAddUser = document.getElementById('quickAddUser');
+            if (quickAddUser) {
+                quickAddUser.onclick = function() {
+                    openUserModal(false);
+                };
+            }
             
             // Kanal ekle butonu
-            document.getElementById('addChannelBtn').onclick = function() {
-                openChannelModal(false);
-            };
+            const addChannelBtn = document.getElementById('addChannelBtn');
+            if (addChannelBtn) {
+                addChannelBtn.onclick = function() {
+                    openChannelModal(false);
+                };
+            }
             
             // Kanal formu
-            document.getElementById('channelForm').onsubmit = function(e) {
-                e.preventDefault();
-                saveChannel();
-            };
+            const channelForm = document.getElementById('channelForm');
+            if (channelForm) {
+                channelForm.onsubmit = function(e) {
+                    e.preventDefault();
+                    saveChannel();
+                };
+            }
             
             // Kategori ekle butonu
-            document.getElementById('addCategoryBtn').onclick = function() {
-                openCategoryModal();
-            };
+            const addCategoryBtn = document.getElementById('addCategoryBtn');
+            if (addCategoryBtn) {
+                addCategoryBtn.onclick = function() {
+                    openCategoryModal();
+                };
+            }
             
             // Kategori formu
-            document.getElementById('categoryForm').onsubmit = function(e) {
-                e.preventDefault();
-                saveCategory();
-            };
+            const categoryForm = document.getElementById('categoryForm');
+            if (categoryForm) {
+                categoryForm.onsubmit = function(e) {
+                    e.preventDefault();
+                    saveCategory();
+                };
+            }
             
             // Kullanıcı ekle butonu
-            document.getElementById('addUserBtn').onclick = function() {
-                openUserModal(false);
-            };
+            const addUserBtn = document.getElementById('addUserBtn');
+            if (addUserBtn) {
+                addUserBtn.onclick = function() {
+                    openUserModal(false);
+                };
+            }
             
             // Kullanıcı formu
-            document.getElementById('userForm').onsubmit = function(e) {
-                e.preventDefault();
-                saveUser();
-            };
+            const userForm = document.getElementById('userForm');
+            if (userForm) {
+                userForm.onsubmit = function(e) {
+                    e.preventDefault();
+                    saveUser();
+                };
+            }
             
             // Modal kapatma butonları
-            document.getElementById('closeLogin').onclick = function() {
-                document.getElementById('loginModal').style.display = 'none';
-            };
+            const closeChannelModal = document.getElementById('closeChannelModal');
+            if (closeChannelModal) {
+                closeChannelModal.onclick = function() {
+                    document.getElementById('channelModal').style.display = 'none';
+                    currentEditingId = null;
+                };
+            }
             
-            document.getElementById('closeChannelModal').onclick = function() {
-                document.getElementById('channelModal').style.display = 'none';
-                currentEditingId = null;
-            };
+            const closeCategoryModal = document.getElementById('closeCategoryModal');
+            if (closeCategoryModal) {
+                closeCategoryModal.onclick = function() {
+                    document.getElementById('categoryModal').style.display = 'none';
+                };
+            }
             
-            document.getElementById('closeCategoryModal').onclick = function() {
-                document.getElementById('categoryModal').style.display = 'none';
-            };
+            const closeUserModal = document.getElementById('closeUserModal');
+            if (closeUserModal) {
+                closeUserModal.onclick = function() {
+                    document.getElementById('userModal').style.display = 'none';
+                    currentEditingId = null;
+                };
+            }
             
-            document.getElementById('closeUserModal').onclick = function() {
-                document.getElementById('userModal').style.display = 'none';
-                currentEditingId = null;
-            };
-            
-            document.getElementById('closeHelpModal').onclick = function() {
-                document.getElementById('helpModal').style.display = 'none';
-            };
+            const closeHelpModal = document.getElementById('closeHelpModal');
+            if (closeHelpModal) {
+                closeHelpModal.onclick = function() {
+                    document.getElementById('helpModal').style.display = 'none';
+                };
+            }
             
             // Modal dışına tıklayınca kapat
             document.querySelectorAll('.modal').forEach(modal => {
