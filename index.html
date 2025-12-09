@@ -696,8 +696,8 @@
     </div>
 
     <script>
-        // VERİ DEPOLAMA
-        let appData = {
+        // VERİ DEPOLAMA - Global olarak erişilebilir
+        window.appData = {
             channels: [
                 {id: 1, name: "TRT 1", category: "news", logo: "TRT", url: ""},
                 {id: 2, name: "Show TV", category: "entertainment", logo: "SHW", url: ""},
@@ -710,14 +710,12 @@
                 {id: 3, name: "Eğlence", key: "entertainment", count: 3}
             ],
             users: [
-                {id: 1, username: "admin", email: "admin@canlitv.com", role: "admin", status: "active", 
+                {id: 1, username: "admin", email: "admin@canlitv.com", password: "admin123", role: "admin", status: "active", 
                  created: "2023-01-15", lastLogin: "2023-12-01 14:30:00"},
-                {id: 2, username: "moderator", email: "mod@canlitv.com", role: "moderator", status: "active", 
+                {id: 2, username: "moderator", email: "mod@canlitv.com", password: "mod123", role: "moderator", status: "active", 
                  created: "2023-02-20", lastLogin: "2023-11-28 09:15:00"},
-                {id: 3, username: "john_doe", email: "john@example.com", role: "user", status: "active", 
-                 created: "2023-03-10", lastLogin: "2023-11-30 16:45:00"},
-                {id: 4, username: "jane_smith", email: "jane@example.com", role: "user", status: "inactive", 
-                 created: "2023-04-05", lastLogin: "2023-10-15 11:20:00"}
+                {id: 3, username: "john_doe", email: "john@example.com", password: "john123", role: "user", status: "active", 
+                 created: "2023-03-10", lastLogin: "2023-11-30 16:45:00"}
             ]
         };
 
@@ -857,8 +855,11 @@
             updateStats();
         }
 
-        function loadAdminChannels() {
+        // KANALLARI YÜKLE - Global fonksiyon
+        window.loadAdminChannels = function() {
             const tbody = document.getElementById('channelsTable');
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
             
             appData.channels.forEach(channel => {
@@ -878,6 +879,8 @@
 
         function loadAdminCategories() {
             const tbody = document.getElementById('categoriesTable');
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
             
             appData.categories.forEach(category => {
@@ -893,8 +896,11 @@
             });
         }
 
-        function loadAdminUsers() {
+        // KULLANICILARI YÜKLE - Global fonksiyon
+        window.loadAdminUsers = function() {
             const tbody = document.getElementById('usersTable');
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
             
             appData.users.forEach(user => {
@@ -919,8 +925,8 @@
             });
         }
 
-        // KULLANICI DETAYLARINI GÖSTER
-        function viewUserDetails(userId) {
+        // KULLANICI DETAYLARINI GÖSTER - Global fonksiyon
+        window.viewUserDetails = function(userId) {
             const user = appData.users.find(u => u.id === userId);
             if (!user) return;
             
@@ -1058,12 +1064,12 @@
             });
         }
 
-        // KANAL DÜZENLE/SİL
-        function editChannel(id) {
+        // KANAL DÜZENLE/SİL - Global fonksiyonlar
+        window.editChannel = function(id) {
             openChannelModal(true, id);
         }
 
-        function deleteChannel(id) {
+        window.deleteChannel = function(id) {
             if (confirm('Bu kanalı silmek istediğinize emin misiniz?')) {
                 appData.channels = appData.channels.filter(c => c.id !== id);
                 updateCategoryCounts();
@@ -1111,7 +1117,7 @@
             alert('Yeni kategori eklendi!');
         }
 
-        function deleteCategory(id) {
+        window.deleteCategory = function(id) {
             const category = appData.categories.find(c => c.id === id);
             if (category.count > 0) {
                 alert('Bu kategoriyi silemezsiniz! Kategoriye bağlı kanallar var.');
@@ -1126,7 +1132,7 @@
             }
         }
 
-        // KULLANICI İŞLEMLERİ
+        // KULLANICI İŞLEMLERİ - Global fonksiyonlar
         function openUserModal(isEdit = false, userId = null) {
             currentEditingId = userId;
             
@@ -1138,15 +1144,21 @@
                     document.getElementById('userEmail').value = user.email;
                     document.getElementById('userRole').value = user.role;
                     document.getElementById('userStatus').value = user.status;
+                    document.getElementById('userPassword').placeholder = "Yeni şifre (değişmeyecekse boş bırak)";
                     document.getElementById('userPassword').required = false;
                 }
             } else {
                 document.getElementById('userModalTitle').textContent = 'Yeni Kullanıcı';
                 document.getElementById('userForm').reset();
+                document.getElementById('userPassword').placeholder = "Şifre";
                 document.getElementById('userPassword').required = true;
             }
             
             document.getElementById('userModal').style.display = 'flex';
+        }
+
+        window.editUser = function(id) {
+            openUserModal(true, id);
         }
 
         function saveUser() {
@@ -1156,8 +1168,36 @@
             const role = document.getElementById('userRole').value;
             const status = document.getElementById('userStatus').value;
             
-            if (!username || !email || (!currentEditingId && !password)) {
-                alert('Lütfen tüm zorunlu alanları doldurun!');
+            // Validasyon
+            if (!username || !email) {
+                alert('Kullanıcı adı ve e-posta zorunludur!');
+                return;
+            }
+            
+            if (!currentEditingId && !password) {
+                alert('Yeni kullanıcı için şifre gereklidir!');
+                return;
+            }
+            
+            // Benzersiz kullanıcı adı kontrolü (düzenleme hariç)
+            const existingUser = appData.users.find(u => 
+                u.username.toLowerCase() === username.toLowerCase() && 
+                u.id !== currentEditingId
+            );
+            
+            if (existingUser) {
+                alert('Bu kullanıcı adı zaten kullanılıyor!');
+                return;
+            }
+            
+            // Benzersiz e-posta kontrolü (düzenleme hariç)
+            const existingEmail = appData.users.find(u => 
+                u.email.toLowerCase() === email.toLowerCase() && 
+                u.id !== currentEditingId
+            );
+            
+            if (existingEmail) {
+                alert('Bu e-posta adresi zaten kullanılıyor!');
                 return;
             }
             
@@ -1174,11 +1214,19 @@
                     };
                     
                     // Eğer şifre girilmişse güncelle
-                    if (password) {
+                    if (password && password.trim() !== '') {
                         updatedUser.password = password;
                     }
                     
                     appData.users[index] = updatedUser;
+                    
+                    // Tabloyu güncelle
+                    loadAdminUsers();
+                    
+                    // Eğer detay modalı açıksa onu da güncelle
+                    if (currentViewingUserId === currentEditingId) {
+                        viewUserDetails(currentEditingId);
+                    }
                 }
             } else {
                 // Yeni ekleme
@@ -1195,21 +1243,22 @@
                     created: currentDate,
                     lastLogin: null
                 });
+                
+                // Tabloyu güncelle
+                loadAdminUsers();
             }
             
-            loadAdminUsers();
+            // İstatistikleri güncelle
             updateStats();
+            
+            // Modalı kapat
             document.getElementById('userModal').style.display = 'none';
             
-            alert(currentEditingId ? 'Kullanıcı güncellendi!' : 'Yeni kullanıcı eklendi!');
+            alert(currentEditingId ? 'Kullanıcı başarıyla güncellendi!' : 'Yeni kullanıcı başarıyla eklendi!');
             currentEditingId = null;
         }
 
-        function editUser(id) {
-            openUserModal(true, id);
-        }
-
-        function deleteUser(id) {
+        window.deleteUser = function(id) {
             const user = appData.users.find(u => u.id === id);
             if (!user) return;
             
@@ -1222,6 +1271,13 @@
                 appData.users = appData.users.filter(u => u.id !== id);
                 loadAdminUsers();
                 updateStats();
+                
+                // Eğer detay modalı açıksa kapat
+                if (currentViewingUserId === id) {
+                    document.getElementById('userDetailModal').style.display = 'none';
+                    currentViewingUserId = null;
+                }
+                
                 alert('Kullanıcı silindi!');
             }
         }
@@ -1241,9 +1297,9 @@
                              user.status === 'inactive' ? 'banned' : 'active';
             
             user.status = newStatus;
-            loadAdminUsers();
             
-            // Detay modalını yenile
+            // Hem tabloyu hem detay modalını güncelle
+            loadAdminUsers();
             viewUserDetails(currentViewingUserId);
             
             alert(`Kullanıcı durumu "${getStatusName(newStatus)}" olarak değiştirildi!`);
@@ -1265,7 +1321,12 @@
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
                 
-                if (username === 'admin' && password === 'admin123') {
+                // Kullanıcı doğrulama
+                const user = appData.users.find(u => 
+                    u.username === username && u.password === password
+                );
+                
+                if (user) {
                     document.getElementById('loginModal').style.display = 'none';
                     document.getElementById('mainApp').style.display = 'none';
                     document.getElementById('adminPanel').style.display = 'block';
@@ -1346,8 +1407,7 @@
             
             document.getElementById('deleteUserDetailBtn').onclick = function() {
                 if (currentViewingUserId) {
-                    document.getElementById('userDetailModal').style.display = 'none';
-                    setTimeout(() => deleteUser(currentViewingUserId), 300);
+                    deleteUser(currentViewingUserId);
                 }
             };
             
