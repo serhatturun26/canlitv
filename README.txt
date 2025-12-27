@@ -1,2 +1,8 @@
+
+IPTV FULL
 Giriş: admin / 1234
-M3U dosyası yükleyerek kanalları izleyebilirsin.
+Özellikler:
+- Online M3U URL
+- Arama
+- Tema
+- Mobil uyumlu

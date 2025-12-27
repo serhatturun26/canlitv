@@ -1,8 +1,9 @@
 
 body{font-family:Arial;background:#0f172a;color:#fff;margin:0}
-header{padding:15px;background:#020617;text-align:center}
-#loginBox{max-width:300px;margin:100px auto;text-align:center}
-input,button{width:100%;padding:10px;margin:5px 0}
-video{width:100%;max-width:900px;display:block;margin:20px auto}
-#channels{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;padding:10px}
-button{background:#2563eb;border:none;color:#fff;border-radius:6px}
+.light{background:#f8fafc;color:#000}
+header{display:flex;justify-content:space-between;align-items:center;
+padding:10px;background:#020617}
+video{width:100%;max-width:900px;margin:10px auto;display:block}
+#channels{display:grid;grid-template-columns:repeat(auto-fill,120px);gap:8px;padding:10px}
+button,input{padding:8px;border-radius:6px;border:none;margin:4px}
+button{background:#2563eb;color:#fff}

@@ -3,25 +3,33 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>IPTV Player</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPTV FULL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="loginBox">
-<h2>Giriş Yap</h2>
-<input id="user" placeholder="Kullanıcı adı">
+<div id="login">
+<h2>IPTV Giriş</h2>
+<input id="user" placeholder="Kullanıcı">
 <input id="pass" type="password" placeholder="Şifre">
 <button onclick="login()">Giriş</button>
 </div>
 
 <div id="app" style="display:none">
-<header>📺 IPTV Player</header>
+<header>
+<h1>📺 IPTV FULL</h1>
+<button onclick="toggleTheme()">🌙</button>
+</header>
+
 <video id="player" controls autoplay></video>
-<input type="file" accept=".m3u" onchange="loadM3U(this)">
+
+<input id="m3uurl" placeholder="M3U URL gir">
+<button onclick="loadFromURL()">M3U Yükle</button>
+
+<input id="search" placeholder="Kanal ara" onkeyup="searchChannel()">
+
 <div id="channels"></div>
-<button onclick="logout()">Çıkış</button>
 </div>
 
 <script src="script.js"></script>
