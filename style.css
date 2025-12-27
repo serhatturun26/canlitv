@@ -1,9 +1,0 @@
-
-body{font-family:Arial;background:#0f172a;color:#fff;margin:0}
-.light{background:#f8fafc;color:#000}
-header{display:flex;justify-content:space-between;align-items:center;
-padding:10px;background:#020617}
-video{width:100%;max-width:900px;margin:10px auto;display:block}
-#channels{display:grid;grid-template-columns:repeat(auto-fill,120px);gap:8px;padding:10px}
-button,input{padding:8px;border-radius:6px;border:none;margin:4px}
-button{background:#2563eb;color:#fff}
