@@ -8,13 +8,12 @@
     <style>
         :root {
             --bg: #f0f2f5;
-            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.75);
             --text: #1a1a1a;
             --primary: #4361ee;
             --success: #06d6a0;
             --shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
-
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
@@ -22,8 +21,6 @@
             color: var(--text);
             line-height: 1.6;
         }
-
-        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary), #3f37c9);
             color: white;
@@ -32,7 +29,6 @@
         }
         header h1 { font-size: 3.5em; margin: 0; }
         header p { font-size: 1.4em; opacity: 0.9; }
-
         .search-hero {
             max-width: 700px;
             margin: 30px auto 0;
@@ -44,9 +40,10 @@
             border: none;
             border-radius: 50px;
             box-shadow: var(--shadow);
+            outline: none;
         }
 
-        /* Slider Bölümü */
+        /* Slider */
         .slider-container {
             max-width: 1300px;
             margin: 40px auto;
@@ -57,62 +54,75 @@
         }
         .slider {
             display: flex;
-            width: 400%; /* 4 slayt olduğu için */
-            animation: slide 20s infinite;
+            transition: transform 0.6s ease;
         }
         .slide {
-            width: 100%;
-            height: 400px;
+            min-width: 100%;
+            height: 450px;
             background-size: cover;
             background-position: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            text-align: center;
             position: relative;
         }
         .slide::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            inset: 0;
             background: rgba(0,0,0,0.5);
         }
         .slide-content {
             position: relative;
-            z-index: 1;
+            text-align: center;
             padding: 20px;
+            max-width: 800px;
         }
-        .slide h2 { font-size: 2.8em; margin: 0 0 15px; }
-        .slide p { font-size: 1.4em; margin: 0 0 25px; }
+        .slide h2 { font-size: 3em; margin: 0 0 15px; }
+        .slide p { font-size: 1.5em; margin: 0 0 25px; }
         .slide-btn {
             background: var(--success);
             color: white;
-            padding: 14px 30px;
+            padding: 14px 32px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
+            transition: 0.3s;
         }
+        .slide-btn:hover { background: #05b583; }
 
-        @keyframes slide {
-            0%   { transform: translateX(0); }
-            22%  { transform: translateX(0); }
-            25%  { transform: translateX(-100%); }
-            47%  { transform: translateX(-100%); }
-            50%  { transform: translateX(-200%); }
-            72%  { transform: translateX(-200%); }
-            75%  { transform: translateX(-300%); }
-            97%  { transform: translateX(-300%); }
-            100% { transform: translateX(0); }
+        /* Slider Kontroller */
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 2em;
+            cursor: pointer;
+            border-radius: 50%;
         }
-
-        /* Mobil için slider yüksekliği */
-        @media (max-width: 768px) {
-            .slide { height: 300px; }
-            .slide h2 { font-size: 2em; }
+        .prev { left: 20px; }
+        .next { right: 20px; }
+        .dots {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
         }
+        .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin: 0 6px;
+            background: #bbb;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .dot.active { background: var(--success); }
 
-        /* Nav ve diğer kısımlar aynı kalıyor */
         nav {
             background: rgba(255,255,255,0.9);
             backdrop-filter: blur(10px);
@@ -132,17 +142,47 @@
 
         .container { max-width: 1300px; margin: 50px auto; padding: 0 20px; }
         .section-title { text-align: center; font-size: 2em; margin-bottom: 40px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
-        .card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); transition: all 0.4s; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+        }
         .card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
-        .card-img { height: 200px; background-size: cover; background-position: center; }
+        .card-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
         .card-content { padding: 25px; }
-        .card h3 a { color: var(--primary); text-decoration: none; }
+        .card h3 a { color: var(--primary); text-decoration: none; font-size: 1.4em; }
         .meta { font-size: 0.95em; color: #888; margin: 15px 0; }
-        .download-btn { display: block; background: var(--success); color: white; text-align: center; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600; }
+        .download-btn {
+            display: block;
+            background: var(--success);
+            color: white;
+            text-align: center;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+        }
         .download-btn:hover { background: #05b583; }
 
         footer { text-align: center; padding: 50px; color: #666; font-size: 0.9em; }
+
+        @media (max-width: 768px) {
+            .slide { height: 350px; }
+            .slide h2 { font-size: 2em; }
+            .prev, .next { font-size: 1.5em; padding: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -151,45 +191,41 @@
     <h1>ProgIndir</h1>
     <p>Güvenilir ve Güncel Yazılım Arşivi</p>
     <div class="search-hero">
-        <input type="text" placeholder="Program ara...">
+        <input type="text" id="searchInput" placeholder="Program ara... (örnek: Chrome, VLC)">
     </div>
 </header>
 
-<!-- YENİ: Slider -->
+<!-- Slider -->
 <div class="slider-container">
-    <div class="slider">
-        <!-- Slayt 1 -->
+    <div class="slider" id="slider">
         <div class="slide" style="background-image: url('https://via.placeholder.com/1600x800/4361ee/ffffff?text=Google+Chrome');">
             <div class="slide-content">
                 <h2>Google Chrome</h2>
-                <p>En hızlı ve güvenli tarayıcı şimdi yeni sürümde!</p>
+                <p>En hızlı ve güvenli tarayıcı yeni sürümde!</p>
                 <a href="#" class="slide-btn">Hemen İndir</a>
             </div>
         </div>
-        <!-- Slayt 2 -->
         <div class="slide" style="background-image: url('https://via.placeholder.com/1600x800/06d6a0/ffffff?text=VLC+Media+Player');">
             <div class="slide-content">
                 <h2>VLC Media Player</h2>
-                <p>Her formatı oynatan efsane medya oynatıcı</p>
+                <p>Her formatı oynatan efsane oynatıcı</p>
                 <a href="#" class="slide-btn">Ücretsiz İndir</a>
             </div>
         </div>
-        <!-- Slayt 3 -->
         <div class="slide" style="background-image: url('https://via.placeholder.com/1600x800/ff6b6b/ffffff?text=WinRAR');">
             <div class="slide-content">
                 <h2>WinRAR 7.01</h2>
-                <p>Dosyalarınızı en iyi şekilde sıkıştırın</p>
+                <p>Dosyalarınızı güçlü şekilde sıkıştırın</p>
                 <a href="#" class="slide-btn">İndir</a>
             </div>
         </div>
-        <!-- Slayt 4 -->
-        <div class="slide" style="background-image: url('https://via.placeholder.com/1600x800/4ecdc4/ffffff?text=Yeni+Programlar');">
-            <div class="slide-content">
-                <h2>Hergün Yeni Programlar</h2>
-                <p>En güncel yazılımlar burada sizleri bekliyor</p>
-                <a href="#" class="slide-btn">Tümünü Gör</a>
-            </div>
-        </div>
+    </div>
+    <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+    <button class="next" onclick="changeSlide(1)">&#10095;</button>
+    <div class="dots">
+        <span class="dot active" onclick="currentSlide(0)"></span>
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
     </div>
 </div>
 
@@ -202,25 +238,62 @@
 </nav>
 
 <div class="container">
-    <h2 class="section-title">Yeni Eklenenler</h2>
-    <div class="grid">
-        <!-- Kartlar aynı kalıyor -->
-        <div class="card">
+    <h2 class="section-title">Yeni Eklenen Programlar</h2>
+    <div class="grid" id="programGrid">
+        <!-- Program Kartları -->
+        <div class="card" data-name="Google Chrome">
             <div class="card-img" style="background-image: url('https://via.placeholder.com/400x200?text=Chrome');"></div>
             <div class="card-content">
                 <h3><a href="#">Google Chrome</a></h3>
-                <p>Hızlı, güvenli tarayıcı.</p>
+                <p>Hızlı, güvenli ve güncel internet tarayıcısı.</p>
                 <div class="meta">98 MB • Ücretsiz • 03.01.2026</div>
                 <a href="#" class="download-btn">İndir</a>
             </div>
         </div>
-        <!-- Diğer kartlar... -->
+        <div class="card" data-name="VLC Media Player">
+            <div class="card-img" style="background-image: url('https://via.placeholder.com/400x200?text=VLC');"></div>
+            <div class="card-content">
+                <h3><a href="#">VLC Media Player</a></h3>
+                <p>Her türlü medya dosyasını oynatır.</p>
+                <div class="meta">42 MB • Ücretsiz</div>
+                <a href="#" class="download-btn">İndir</a>
+            </div>
+        </div>
+        <!-- Daha fazla kart ekleyebilirsin -->
     </div>
 </div>
 
 <footer>
     <p>&copy; 2026 ProgIndir. Tüm hakları saklıdır.</p>
 </footer>
+
+<script>
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+
+    function showSlide(n) {
+        slideIndex = (n + slides.length) % slides.length;
+        document.getElementById('slider').style.transform = `translateX(-${slideIndex * 100}%)`;
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === slideIndex));
+    }
+
+    function changeSlide(n) { showSlide(slideIndex + n); }
+    function currentSlide(n) { showSlide(n); }
+
+    // Otomatik kaydırma
+    setInterval(() => changeSlide(1), 6000);
+    showSlide(0);
+
+    // Arama filtreleme
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        document.querySelectorAll('.card').forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            card.style.display = name.includes(query) ? '' : 'none';
+        });
+    });
+</script>
 
 </body>
 </html>
