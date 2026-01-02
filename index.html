@@ -3,211 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yazılım İndir - Güvenilir Program Arşivi</title>
+    <title>ProgIndir - Modern Yazılım Arşivi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --text: #1a1a1a;
+            --primary: #4361ee;
+            --success: #06d6a0;
+            --shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        /* Dark mode için yorumu kaldır: */
+        /* @media (prefers-color-scheme: dark) {
+            :root { --bg: #121212; --card-bg: rgba(30,30,30,0.8); --text: #e0e0e0; --primary: #4895ef; }
+        } */
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
-            background: #f8f9fa;
-            color: #333;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
         }
         header {
-            background: linear-gradient(135deg, #007bff, #0056b3);
+            background: linear-gradient(135deg, var(--primary), #3f37c9);
             color: white;
-            padding: 40px 20px;
             text-align: center;
+            padding: 80px 20px;
         }
         header h1 {
+            font-size: 3.5em;
             margin: 0;
-            font-size: 2.5em;
         }
         header p {
-            font-size: 1.2em;
+            font-size: 1.4em;
             opacity: 0.9;
         }
+        .search-hero {
+            max-width: 700px;
+            margin: 30px auto 0;
+        }
+        .search-hero input {
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+        }
         nav {
-            background: #fff;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
             padding: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
             position: sticky;
             top: 0;
             z-index: 100;
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        nav li {
-            margin: 0 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
         nav a {
-            color: #007bff;
+            margin: 0 20px;
+            color: var(--text);
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #0056b3;
         }
         .container {
-            max-width: 1200px;
-            margin: 30px auto;
+            max-width: 1300px;
+            margin: 50px auto;
             padding: 0 20px;
         }
-        .search-bar {
-            margin-bottom: 30px;
+        .section-title {
             text-align: center;
-        }
-        .search-bar input {
-            width: 100%;
-            max-width: 600px;
-            padding: 15px;
-            font-size: 1.1em;
-            border: 1px solid #ddd;
-            border-radius: 50px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 2em;
+            margin-bottom: 40px;
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
         }
         .card {
-            background: white;
-            border-radius: 12px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
         }
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
-        .card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background: #eee; /* Placeholder için */
+        .card-img {
+            height: 200px;
+            background: #ddd;
+            background-size: cover;
+            background-position: center;
         }
         .card-content {
-            padding: 20px;
+            padding: 25px;
         }
         .card h3 {
-            margin: 0 0 10px;
-            font-size: 1.3em;
+            margin: 0 0 15px;
+            font-size: 1.4em;
         }
         .card h3 a {
-            color: #007bff;
+            color: var(--primary);
             text-decoration: none;
         }
-        .card h3 a:hover {
-            text-decoration: underline;
-        }
         .card p {
-            margin: 8px 0;
-            color: #666;
-            line-height: 1.5;
+            color: #555;
+            margin: 10px 0;
         }
         .meta {
-            font-size: 0.9em;
+            font-size: 0.95em;
             color: #888;
-            margin-top: 10px;
+            margin: 15px 0;
         }
         .download-btn {
             display: block;
-            margin-top: 15px;
-            background: #28a745;
+            background: var(--success);
             color: white;
             text-align: center;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 12px;
             text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s;
+            font-weight: 600;
+            transition: all 0.3s;
         }
         .download-btn:hover {
-            background: #218838;
+            background: #05b583;
+            transform: scale(1.02);
         }
         footer {
-            background: #343a40;
-            color: white;
             text-align: center;
-            padding: 30px;
-            margin-top: 50px;
-        }
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
+            padding: 50px;
+            color: #666;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Yazılım İndir</h1>
-    <p>En güvenilir ve güncel program arşivi</p>
+    <h1>ProgIndir</h1>
+    <p>Güvenilir ve Güncel Yazılım Arşivi</p>
+    <div class="search-hero">
+        <input type="text" placeholder="Program ara...">
+    </div>
 </header>
 
 <nav>
-    <ul>
-        <li><a href="#">Ana Sayfa</a></li>
-        <li><a href="#">Kategoriler</a></li>
-        <li><a href="#">Yeni Eklenenler</a></li>
-        <li><a href="#">Popüler</a></li>
-        <li><a href="#">İletişim</a></li>
-    </ul>
+    <a href="#">Ana Sayfa</a>
+    <a href="#">Kategoriler</a>
+    <a href="#">Popüler</a>
+    <a href="#">Yeni</a>
+    <a href="#">İletişim</a>
 </nav>
 
 <div class="container">
-    <div class="search-bar">
-        <input type="text" placeholder="Program ara... (ör: Chrome, VLC)">
-    </div>
-
-    <h2 style="text-align:center; margin-bottom:30px;">Yeni Eklenen Programlar</h2>
-
+    <h2 class="section-title">Yeni Eklenenler</h2>
     <div class="grid">
         <div class="card">
-            <img src="https://via.placeholder.com/300x180?text=Chrome" alt="Chrome">
+            <div class="card-img" style="background-image: url('https://via.placeholder.com/400x200?text=Chrome');"></div>
             <div class="card-content">
-                <h3><a href="#">Google Chrome 131.0</a></h3>
-                <p>Hızlı ve güvenli internet tarayıcısı.</p>
-                <div class="meta">Boyut: 98 MB | Tür: Ücretsiz | Tarih: 03.01.2026</div>
+                <h3><a href="#">Google Chrome</a></h3>
+                <p>Hızlı, güvenli tarayıcı.</p>
+                <div class="meta">98 MB • Ücretsiz • 03.01.2026</div>
                 <a href="#" class="download-btn">İndir</a>
             </div>
         </div>
 
         <div class="card">
-            <img src="https://via.placeholder.com/300x180?text=VLC" alt="VLC">
+            <div class="card-img" style="background-image: url('https://via.placeholder.com/400x200?text=VLC');"></div>
             <div class="card-content">
-                <h3><a href="#">VLC Media Player 3.0.21</a></h3>
-                <p>Her formatı destekleyen medya oynatıcı.</p>
-                <div class="meta">Boyut: 42 MB | Tür: Ücretsiz</div>
+                <h3><a href="#">VLC Media Player</a></h3>
+                <p>Her formatı oynatır.</p>
+                <div class="meta">42 MB • Ücretsiz</div>
                 <a href="#" class="download-btn">İndir</a>
             </div>
         </div>
 
         <div class="card">
-            <img src="https://via.placeholder.com/300x180?text=WinRAR" alt="WinRAR">
+            <div class="card-img" style="background-image: url('https://via.placeholder.com/400x200?text=WinRAR');"></div>
             <div class="card-content">
-                <h3><a href="#">WinRAR 7.01</a></h3>
-                <p>Güçlü sıkıştırma aracı.</p>
-                <div class="meta">Boyut: 3.5 MB | Tür: Deneme</div>
+                <h3><a href="#">WinRAR</a></h3>
+                <p>Güçlü arşivleme aracı.</p>
+                <div class="meta">3.5 MB • Deneme</div>
                 <a href="#" class="download-btn">İndir</a>
             </div>
         </div>
-
-        <!-- Daha fazla kart ekleyebilirsin -->
+        <!-- Daha fazla ekle -->
     </div>
 </div>
 
 <footer>
-    <p>&copy; 2026 Yazılım İndir. Tüm hakları saklıdır.</p>
+    <p>&copy; 2026 ProgIndir. Tüm hakları saklıdır.</p>
 </footer>
 
 </body>
