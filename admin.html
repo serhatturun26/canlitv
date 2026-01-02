@@ -24,7 +24,6 @@
 </head>
 <body>
 
-<!-- Giriş Modalı (Sayfa açılır açılmaz gösterilir eğer oturum yoksa) -->
 <div id="loginModal">
     <div>
         <h2 style="color:#4361ee;">Admin Girişi</h2>
@@ -51,7 +50,7 @@
                 <input type="url" id="image" placeholder="Resim URL (opsiyonel)">
                 <input type="text" id="size" placeholder="Boyut (ör: 98 MB)">
                 <input type="text" id="license" placeholder="Lisans (Ücretsiz/Deneme)">
-                <input type="url" id="downloadLink" placeholder="İndirme Linki" required>
+                <input type="url" id="downloadLink" placeholder="İndirme Linki (ör: https://example.com/indir)" required> <!-- BURASI LINK YERI -->
                 <input type="date" id="date" required>
                 <label><input type="checkbox" id="featured"> Slider'da Göster</label>
                 <button type="submit">Ekle</button>
@@ -83,7 +82,6 @@
         }
     }
 
-    // Oturum kontrolü
     if (localStorage.getItem('adminLoggedIn') === 'true') {
         document.getElementById('loginModal').style.display = 'none';
         document.getElementById('panelHeader').style.display = 'block';
