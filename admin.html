@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Paneli - ProgIndir</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text: #1a1a1a;
+            --primary: #4361ee;
+            --success: #06d6a0;
+            --danger: #e63946;
+            --shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary), #3f37c9);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .admin-header h1 { margin: 0; font-size: 2.2em; }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap:  30px;
+        }
+        .form-card, .list-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+        h2 { color: var(--primary); }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+        }
+        button {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        button:hover { background: #05b583; }
+        .btn-danger {
+            background: var(--danger);
+        }
+        .btn-danger:hover { background: #c1121f; }
+        .program-item {
+            background: rgba(255,255,255,0.6);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logout {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.3);
+            padding: 10px 20px;
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        @media (max-width: 992px) {
+            .dashboard { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-header">
+    <h1>Admin Paneli</h1>
+    <p>Yeni program ekle, mevcutları yönet</p>
+    <a href="index.html" class="logout">Çıkış Yap</a>
+</div>
+
+<div class="container">
+    <div class="dashboard">
+        <!-- Program Ekleme Formu -->
+        <div class="form-card">
+            <h2>Yeni Program Ekle</h2>
+            <form id="addProgramForm">
+                <input type="text" id="name" placeholder="Program Adı" required>
+                <textarea id="description" rows="4" placeholder="Açıklama" required></textarea>
+                <input type="text" id="image" placeholder="Resim URL (placeholder da olur)">
+                <input type="text" id="size" placeholder="Boyut (ör: 98 MB)">
+                <input type="text" id="license" placeholder="Lisans (Ücretsiz/Deneme)">
+                <input type="date" id="date" required>
+                <label><input type="checkbox" id="featured"> Slider'da Göster (Öne Çıkan)</label>
+                <button type="submit">Program Ekle</button>
+            </form>
+        </div>
+
+        <!-- Program Listesi -->
+        <div class="list-card">
+            <h2>Mevcut Programlar</h2>
+            <div id="programList">Henüz program yok.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const programs = JSON.parse(localStorage.getItem('programs')) || [];
+
+    function savePrograms() {
+        localStorage.setItem('programs', JSON.stringify(programs));
+    }
+
+    function renderPrograms() {
+        const list = document.getElementById('programList');
+        if (programs.length === 0) {
+            list.innerHTML = '<p>Henüz program eklenmemiş.</p>';
+            return;
+        }
+        list.innerHTML = programs.map((p, i) => `
+            <div class="program-item">
+                <div>
+                    <strong>${p.name}</strong><br>
+                    <small>${p.size} • ${p.license} • ${p.date}</small>
+                    ${p.featured ? ' <strong style="color:var(--success)">[Slider]</strong>' : ''}
+                </div>
+                <button class="btn-danger" onclick="deleteProgram(${i})">Sil</button>
+            </div>
+        `).join('');
+    }
+
+    document.getElementById('addProgramForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const newProg = {
+            name: document.getElementById('name').value,
+            description: document.getElementById('description').value,
+            image: document.getElementById('image').value || 'https://via.placeholder.com/400x200?text=' + encodeURIComponent(document.getElementById('name').value),
+            size: document.getElementById('size').value || 'Bilinmiyor',
+            license: document.getElementById('license').value || 'Ücretsiz',
+            date: document.getElementById('date').value,
+            featured: document.getElementById('featured').checked
+        };
+        programs.push(newProg);
+        savePrograms();
+        renderPrograms();
+        this.reset();
+        alert('Program başarıyla eklendi!');
+    });
+
+    function deleteProgram(index) {
+        if (confirm('Bu programı silmek istediğinizden emin misiniz?')) {
+            programs.splice(index, 1);
+            savePrograms();
+            renderPrograms();
+        }
+    }
+
+    renderPrograms();
+</script>
+
+</body>
+</html>
