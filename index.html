@@ -15,13 +15,12 @@
             --shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
         body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: var(--text); line-height: 1.6; }
-        header { background: linear-gradient(135deg, var(--primary), #3f37c9); color: white; text-align: center; padding: 80px 20px 40px; position: relative; }
+        header { background: linear-gradient(135deg, var(--primary), #3f37c9); color: white; text-align: center; padding: 80px 20px 40px; }
         header h1 { font-size: 3.5em; margin: 0; }
         header p { font-size: 1.4em; opacity: 0.9; }
         .search-hero { max-width: 700px; margin: 30px auto 0; }
         .search-hero input { width: 100%; padding: 18px 24px; font-size: 1.2em; border: none; border-radius: 50px; box-shadow: var(--shadow); outline: none; }
 
-        /* Slider */
         .slider-container { max-width: 1300px; margin: 40px auto; overflow: hidden; border-radius: 20px; box-shadow: var(--shadow); position: relative; }
         .slider { display: flex; transition: transform 0.6s ease; }
         .slide { min-width: 100%; height: 450px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; position: relative; }
@@ -29,10 +28,9 @@
         .slide-content { position: relative; text-align: center; padding: 20px; max-width: 800px; }
         .slide h2 { font-size: 3em; margin: 0 0 15px; }
         .slide p { font-size: 1.5em; margin: 0 0 25px; }
-        .slide-btn { background: var(--success); color: white; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .slide-btn { background: var(--success); color: white; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: 600; }
         .slide-btn:hover { background: #05b583; }
 
-        /* Kontroller */
         .prev, .next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 15px; font-size: 2em; cursor: pointer; border-radius: 50%; }
         .prev { left: 20px; } .next { right: 20px; }
         .dots { text-align: center; padding: 15px; background: rgba(0,0,0,0.3); }
@@ -55,10 +53,6 @@
         .download-btn:hover { background: #05b583; }
 
         footer { text-align: center; padding: 50px; color: #666; font-size: 0.9em; }
-
-        /* Modal */
-        #loginModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
-        #loginModal > div { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
@@ -71,7 +65,6 @@
     </div>
 </header>
 
-<!-- Slider -->
 <div class="slider-container">
     <div class="slider" id="slider"></div>
     <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
@@ -96,49 +89,7 @@
     <p>&copy; 2026 ProgIndir. Tüm hakları saklıdır.</p>
 </footer>
 
-<!-- Admin Giriş Modalı -->
-<div id="loginModal">
-    <div>
-        <h2 style="color:#4361ee; margin-top:0;">Admin Girişi</h2>
-        <input type="text" id="username" placeholder="Kullanıcı adı">
-        <input type="password" id="password" placeholder="Şifre">
-        <div style="display:flex; gap:10px; margin-top:20px;">
-            <button onclick="login()" style="flex:1; background:#06d6a0; color:white; border:none; padding:15px; border-radius:12px; cursor:pointer; font-weight:600;">Giriş Yap</button>
-            <button onclick="document.getElementById('loginModal').style.display='none'" style="flex:1; background:#e63946; color:white; border:none; padding:15px; border-radius:12px; cursor:pointer; font-weight:600;">İptal</button>
-        </div>
-        <p id="loginError" style="color:#e63946; margin-top:15px; display:none;">Kullanıcı adı veya şifre yanlış!</p>
-    </div>
-</div>
-
 <script>
-    // Admin giriş butonu ekle
-    document.addEventListener('DOMContentLoaded', function() {
-        const header = document.querySelector('header');
-        const adminBtn = document.createElement('a');
-        adminBtn.href = 'javascript:void(0)';
-        adminBtn.textContent = 'Admin Paneli';
-        adminBtn.style.cssText = 'position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.3); padding:12px 24px; border-radius:50px; color:white; text-decoration:none; font-weight:600; backdrop-filter:blur(10px);';
-        adminBtn.onclick = () => document.getElementById('loginModal').style.display = 'flex';
-        header.appendChild(adminBtn);
-    });
-
-    // Şifreyi gizli tut (obfuscate)
-    const encoded = 'NTQzMjEA'; // "admin@12345" ters + base64 (değiştirebilirsin)
-    function decodePass(e) { return atob(e.split('').reverse().join('')); }
-    const realPass = decodePass(encoded); // Gerçek şifre burada çözülür
-
-    function login() {
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
-        if (username === 'admin' && password === realPass) {
-            localStorage.setItem('adminLoggedIn', 'true');
-            window.location.href = 'admin.html';
-        } else {
-            document.getElementById('loginError').style.display = 'block';
-        }
-    }
-
-    // Slider ve Programlar
     let slideIndex = 0;
     const slider = document.getElementById('slider');
     const dotsContainer = document.getElementById('dotsContainer');
@@ -159,9 +110,7 @@
         dotsContainer.innerHTML = '';
 
         const featured = programs.filter(p => p.featured);
-        const allPrograms = programs.length > 0 ? programs : []; // Varsayılan statik yoksa boş
 
-        // Slider - Öne çıkanlar
         if (featured.length > 0) {
             featured.forEach((p, i) => {
                 const slide = document.createElement('div');
@@ -180,12 +129,10 @@
                 dotsContainer.appendChild(dot);
             });
         } else {
-            // Varsayılan slider (boşsa)
             slider.innerHTML = '<div class="slide" style="background:#4361ee;color:white;"><div class="slide-content"><h2>Hoş Geldiniz!</h2><p>Admin panelinden program ekleyin.</p></div></div>';
         }
 
-        // Program kartları
-        allPrograms.forEach(p => {
+        programs.forEach(p => {
             const card = document.createElement('div');
             card.className = 'card';
             card.setAttribute('data-name', p.name.toLowerCase());
@@ -201,21 +148,19 @@
             programGrid.appendChild(card);
         });
 
-        // Otomatik kaydırma
         if (featured.length > 1) setInterval(() => changeSlide(1), 6000);
         showSlide(0);
     }
 
-    // Arama
     document.getElementById('searchInput').addEventListener('input', function() {
         const query = this.value.toLowerCase();
         document.querySelectorAll('.card').forEach(card => {
-            const name = card.getAttribute('data-name');
+            const name = card.getAttribute('data-name') || '';
             card.style.display = name.includes(query) ? '' : 'none';
         });
     });
 
-    loadPrograms(); // Sayfa yüklendiğinde programları yükle
+    loadPrograms();
 </script>
 
 </body>
