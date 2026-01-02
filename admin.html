@@ -6,147 +6,110 @@
     <title>Admin Paneli - ProgIndir</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #f0f2f5;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --text: #1a1a1a;
-            --primary: #4361ee;
-            --success: #06d6a0;
-            --danger: #e63946;
-            --shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-        .admin-header {
-            background: linear-gradient(135deg, var(--primary), #3f37c9);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .admin-header h1 { margin: 0; font-size: 2.2em; }
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap:  30px;
-        }
-        .form-card, .list-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-        }
-        h2 { color: var(--primary); }
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 1em;
-        }
-        button {
-            background: var(--success);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-        button:hover { background: #05b583; }
-        .btn-danger {
-            background: var(--danger);
-        }
-        .btn-danger:hover { background: #c1121f; }
-        .program-item {
-            background: rgba(255,255,255,0.6);
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logout {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.3);
-            padding: 10px 20px;
-            border-radius: 50px;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        @media (max-width: 992px) {
-            .dashboard { grid-template-columns: 1fr; }
-        }
+        :root { --bg: #f0f2f5; --card-bg: rgba(255,255,255,0.8); --text: #1a1a1a; --primary: #4361ee; --success: #06d6a0; --danger: #e63946; --shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: var(--text); min-height: 100vh; }
+        .admin-header { background: linear-gradient(135deg, var(--primary), #3f37c9); color: white; padding: 20px; text-align: center; position: relative; }
+        .logout { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 50px; color: white; text-decoration: none; font-weight: 600; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .dashboard { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        .form-card, .list-card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; }
+        button { background: var(--success); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+        .btn-danger { background: var(--danger); }
+        .program-item { background: rgba(255,255,255,0.6); padding: 15px; margin: 15px 0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        #loginModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        #loginModal > div { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
+        @media (max-width: 992px) { .dashboard { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<div class="admin-header">
+<!-- Giriş Modalı (Sayfa açılır açılmaz gösterilir eğer oturum yoksa) -->
+<div id="loginModal">
+    <div>
+        <h2 style="color:#4361ee;">Admin Girişi</h2>
+        <input type="text" id="username" placeholder="Kullanıcı adı">
+        <input type="password" id="password" placeholder="Şifre">
+        <button onclick="login()" style="margin-top:20px; width:100%; padding:15px;">Giriş Yap</button>
+        <p id="loginError" style="color:#e63946; margin-top:15px; display:none;">Yanlış kullanıcı adı veya şifre!</p>
+    </div>
+</div>
+
+<div class="admin-header" style="display:none;" id="panelHeader">
     <h1>Admin Paneli</h1>
     <p>Yeni program ekle, mevcutları yönet</p>
     <a href="index.html" class="logout">Çıkış Yap</a>
 </div>
 
-<div class="container">
+<div class="container" style="display:none;" id="panelContent">
     <div class="dashboard">
-        <!-- Program Ekleme Formu -->
         <div class="form-card">
             <h2>Yeni Program Ekle</h2>
             <form id="addProgramForm">
                 <input type="text" id="name" placeholder="Program Adı" required>
                 <textarea id="description" rows="4" placeholder="Açıklama" required></textarea>
-                <input type="text" id="image" placeholder="Resim URL (placeholder da olur)">
+                <input type="url" id="image" placeholder="Resim URL (opsiyonel)">
                 <input type="text" id="size" placeholder="Boyut (ör: 98 MB)">
                 <input type="text" id="license" placeholder="Lisans (Ücretsiz/Deneme)">
+                <input type="url" id="downloadLink" placeholder="İndirme Linki" required>
                 <input type="date" id="date" required>
-                <label><input type="checkbox" id="featured"> Slider'da Göster (Öne Çıkan)</label>
-                <button type="submit">Program Ekle</button>
+                <label><input type="checkbox" id="featured"> Slider'da Göster</label>
+                <button type="submit">Ekle</button>
             </form>
         </div>
-
-        <!-- Program Listesi -->
         <div class="list-card">
             <h2>Mevcut Programlar</h2>
-            <div id="programList">Henüz program yok.</div>
+            <div id="programList">Yükleniyor...</div>
         </div>
     </div>
 </div>
 
 <script>
-    const programs = JSON.parse(localStorage.getItem('programs')) || [];
+    const encoded = 'NTQzMjEA'; // "admin@12345" ters + base64
+    function decodePass(e) { return atob(e.split('').reverse().join('')); }
+    const realPass = decodePass(encoded);
 
-    function savePrograms() {
-        localStorage.setItem('programs', JSON.stringify(programs));
+    function login() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        if (username === 'admin' && password === realPass) {
+            localStorage.setItem('adminLoggedIn', 'true');
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('panelHeader').style.display = 'block';
+            document.getElementById('panelContent').style.display = 'block';
+            renderPrograms();
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+        }
     }
+
+    // Oturum kontrolü
+    if (localStorage.getItem('adminLoggedIn') === 'true') {
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('panelHeader').style.display = 'block';
+        document.getElementById('panelContent').style.display = 'block';
+    }
+
+    document.querySelector('.logout').onclick = function(e) {
+        e.preventDefault();
+        localStorage.removeItem('adminLoggedIn');
+        window.location.href = 'index.html';
+    };
+
+    const programs = JSON.parse(localStorage.getItem('programs')) || [];
+    function savePrograms() { localStorage.setItem('programs', JSON.stringify(programs)); }
 
     function renderPrograms() {
         const list = document.getElementById('programList');
         if (programs.length === 0) {
-            list.innerHTML = '<p>Henüz program eklenmemiş.</p>';
+            list.innerHTML = '<p>Henüz program yok.</p>';
             return;
         }
         list.innerHTML = programs.map((p, i) => `
             <div class="program-item">
-                <div>
-                    <strong>${p.name}</strong><br>
-                    <small>${p.size} • ${p.license} • ${p.date}</small>
-                    ${p.featured ? ' <strong style="color:var(--success)">[Slider]</strong>' : ''}
+                <div><strong>\( {p.name}</strong><br> \){p.size} • ${p.license} • ${p.date}<br>
+                <small>Link: <a href="\( {p.downloadLink}" target="_blank"> \){p.downloadLink.substring(0,40)}...</a></small>
+                ${p.featured ? ' <strong style="color:var(--success)">[Slider]</strong>' : ''}
                 </div>
                 <button class="btn-danger" onclick="deleteProgram(${i})">Sil</button>
             </div>
@@ -158,9 +121,10 @@
         const newProg = {
             name: document.getElementById('name').value,
             description: document.getElementById('description').value,
-            image: document.getElementById('image').value || 'https://via.placeholder.com/400x200?text=' + encodeURIComponent(document.getElementById('name').value),
+            image: document.getElementById('image').value || `https://via.placeholder.com/400x200?text=${encodeURIComponent(document.getElementById('name').value)}`,
             size: document.getElementById('size').value || 'Bilinmiyor',
             license: document.getElementById('license').value || 'Ücretsiz',
+            downloadLink: document.getElementById('downloadLink').value,
             date: document.getElementById('date').value,
             featured: document.getElementById('featured').checked
         };
@@ -168,18 +132,18 @@
         savePrograms();
         renderPrograms();
         this.reset();
-        alert('Program başarıyla eklendi!');
+        alert('Eklendi!');
     });
 
-    function deleteProgram(index) {
-        if (confirm('Bu programı silmek istediğinizden emin misiniz?')) {
-            programs.splice(index, 1);
+    function deleteProgram(i) {
+        if (confirm('Silmek istiyor musunuz?')) {
+            programs.splice(i, 1);
             savePrograms();
             renderPrograms();
         }
     }
 
-    renderPrograms();
+    if (localStorage.getItem('adminLoggedIn') === 'true') renderPrograms();
 </script>
 
 </body>
