@@ -3,82 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yazılım İndir - Program Arşivi</title>
+    <title>Yazılım İndir - Güvenilir Program Arşivi</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: #f4f4f4;
+            background: #f8f9fa;
             color: #333;
         }
         header {
-            background: #2c3e50;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: white;
-            padding: 20px;
+            padding: 40px 20px;
             text-align: center;
         }
-        header h1 { margin: 0; }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
         nav {
-            background: #34495e;
-            padding: 10px;
-            text-align: center;
+            background: #fff;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav li {
+            margin: 0 15px;
         }
         nav a {
-            color: white;
-            margin: 0 15px;
+            color: #007bff;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
+            transition: color 0.3s;
         }
-        nav a:hover { text-decoration: underline; }
+        nav a:hover {
+            color: #0056b3;
+        }
         .container {
-            width: 90%;
             max-width: 1200px;
-            margin: 20px auto;
-            display: flex;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .search-bar {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .search-bar input {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
-        .sidebar {
-            width: 25%;
+        .card {
             background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .main {
-            width: 75%;
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
-        .program {
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #eee; /* Placeholder için */
         }
-        .program h3 {
-            margin: 0 0 10px 0;
+        .card-content {
+            padding: 20px;
         }
-        .program a {
-            color: #2980b9;
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 1.3em;
+        }
+        .card h3 a {
+            color: #007bff;
             text-decoration: none;
-            font-weight: bold;
         }
-        .program a:hover { text-decoration: underline; }
-        .download-btn {
-            display: inline-block;
-            background: #27ae60;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
+        .card h3 a:hover {
+            text-decoration: underline;
+        }
+        .card p {
+            margin: 8px 0;
+            color: #666;
+            line-height: 1.5;
+        }
+        .meta {
+            font-size: 0.9em;
+            color: #888;
             margin-top: 10px;
         }
-        footer {
-            background: #2c3e50;
+        .download-btn {
+            display: block;
+            margin-top: 15px;
+            background: #28a745;
             color: white;
             text-align: center;
-            padding: 20px;
-            margin-top: 30px;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background: #218838;
+        }
+        footer {
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -86,59 +151,59 @@
 
 <header>
     <h1>Yazılım İndir</h1>
-    <p>En Güncel Programlar ve Oyunlar</p>
+    <p>En güvenilir ve güncel program arşivi</p>
 </header>
 
 <nav>
-    <a href="index.html">Ana Sayfa</a>
-    <a href="#">Kategoriler</a>
-    <a href="#">Yeni Eklenenler</a>
-    <a href="#">Popüler</a>
-    <a href="#">İletişim</a>
+    <ul>
+        <li><a href="#">Ana Sayfa</a></li>
+        <li><a href="#">Kategoriler</a></li>
+        <li><a href="#">Yeni Eklenenler</a></li>
+        <li><a href="#">Popüler</a></li>
+        <li><a href="#">İletişim</a></li>
+    </ul>
 </nav>
 
 <div class="container">
-    <aside class="sidebar">
-        <h2>Kategoriler</h2>
-        <ul style="list-style:none; padding:0;">
-            <li><a href="#">Antivirüs</a></li>
-            <li><a href="#">Ofis Programları</a></li>
-            <li><a href="#">Medya Oynatıcı</a></li>
-            <li><a href="#">İnternet Tarayıcı</a></li>
-            <li><a href="#">Oyunlar</a></li>
-            <li><a href="#">Sıkıştırma</a></li>
-            <li><a href="#">Grafik & Tasarım</a></li>
-        </ul>
+    <div class="search-bar">
+        <input type="text" placeholder="Program ara... (ör: Chrome, VLC)">
+    </div>
 
-        <h2 style="margin-top:30px;">Arama</h2>
-        <input type="text" placeholder="Program ara..." style="width:100%; padding:8px;">
-    </aside>
+    <h2 style="text-align:center; margin-bottom:30px;">Yeni Eklenen Programlar</h2>
 
-    <section class="main">
-        <h2>Yeni Eklenen Programlar</h2>
-
-        <div class="program">
-            <h3><a href="detail.html">Google Chrome 131.0</a></h3>
-            <p>Hızlı, güvenli ve güncel internet tarayıcısı.</p>
-            <p><strong>Boyut:</strong> 98 MB | <strong>Tür:</strong> Ücretsiz | <strong>Tarih:</strong> 02.01.2026</p>
-            <a href="#" class="download-btn">İndir</a>
+    <div class="grid">
+        <div class="card">
+            <img src="https://via.placeholder.com/300x180?text=Chrome" alt="Chrome">
+            <div class="card-content">
+                <h3><a href="#">Google Chrome 131.0</a></h3>
+                <p>Hızlı ve güvenli internet tarayıcısı.</p>
+                <div class="meta">Boyut: 98 MB | Tür: Ücretsiz | Tarih: 03.01.2026</div>
+                <a href="#" class="download-btn">İndir</a>
+            </div>
         </div>
 
-        <div class="program">
-            <h3><a href="#">VLC Media Player 3.0.21</a></h3>
-            <p>Her türlü video ve ses dosyasını oynatabilen ücretsiz medya oynatıcı.</p>
-            <p><strong>Boyut:</strong> 42 MB | <strong>Tür:</strong> Ücretsiz</p>
-            <a href="#" class="download-btn">İndir</a>
+        <div class="card">
+            <img src="https://via.placeholder.com/300x180?text=VLC" alt="VLC">
+            <div class="card-content">
+                <h3><a href="#">VLC Media Player 3.0.21</a></h3>
+                <p>Her formatı destekleyen medya oynatıcı.</p>
+                <div class="meta">Boyut: 42 MB | Tür: Ücretsiz</div>
+                <a href="#" class="download-btn">İndir</a>
+            </div>
         </div>
 
-        <div class="program">
-            <h3><a href="#">WinRAR 7.01</a></h3>
-            <p>Güçlü dosya sıkıştırma ve arşivleme programı.</p>
-            <p><strong>Boyut:</strong> 3.5 MB | <strong>Tür:</strong> Deneme Sürümü</p>
-            <a href="#" class="download-btn">İndir</a>
+        <div class="card">
+            <img src="https://via.placeholder.com/300x180?text=WinRAR" alt="WinRAR">
+            <div class="card-content">
+                <h3><a href="#">WinRAR 7.01</a></h3>
+                <p>Güçlü sıkıştırma aracı.</p>
+                <div class="meta">Boyut: 3.5 MB | Tür: Deneme</div>
+                <a href="#" class="download-btn">İndir</a>
+            </div>
         </div>
 
-    </section>
+        <!-- Daha fazla kart ekleyebilirsin -->
+    </div>
 </div>
 
 <footer>
