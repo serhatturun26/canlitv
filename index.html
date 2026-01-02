@@ -14,10 +14,6 @@
             --success: #06d6a0;
             --shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
-        /* Dark mode için yorumu kaldır: */
-        /* @media (prefers-color-scheme: dark) {
-            :root { --bg: #121212; --card-bg: rgba(30,30,30,0.8); --text: #e0e0e0; --primary: #4895ef; }
-        } */
 
         body {
             font-family: 'Inter', sans-serif;
@@ -26,20 +22,17 @@
             color: var(--text);
             line-height: 1.6;
         }
+
+        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary), #3f37c9);
             color: white;
             text-align: center;
-            padding: 80px 20px;
+            padding: 80px 20px 40px;
         }
-        header h1 {
-            font-size: 3.5em;
-            margin: 0;
-        }
-        header p {
-            font-size: 1.4em;
-            opacity: 0.9;
-        }
+        header h1 { font-size: 3.5em; margin: 0; }
+        header p { font-size: 1.4em; opacity: 0.9; }
+
         .search-hero {
             max-width: 700px;
             margin: 30px auto 0;
@@ -52,6 +45,74 @@
             border-radius: 50px;
             box-shadow: var(--shadow);
         }
+
+        /* Slider Bölümü */
+        .slider-container {
+            max-width: 1300px;
+            margin: 40px auto;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        .slider {
+            display: flex;
+            width: 400%; /* 4 slayt olduğu için */
+            animation: slide 20s infinite;
+        }
+        .slide {
+            width: 100%;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+        }
+        .slide-content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+        .slide h2 { font-size: 2.8em; margin: 0 0 15px; }
+        .slide p { font-size: 1.4em; margin: 0 0 25px; }
+        .slide-btn {
+            background: var(--success);
+            color: white;
+            padding: 14px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @keyframes slide {
+            0%   { transform: translateX(0); }
+            22%  { transform: translateX(0); }
+            25%  { transform: translateX(-100%); }
+            47%  { transform: translateX(-100%); }
+            50%  { transform: translateX(-200%); }
+            72%  { transform: translateX(-200%); }
+            75%  { transform: translateX(-300%); }
+            97%  { transform: translateX(-300%); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Mobil için slider yüksekliği */
+        @media (max-width: 768px) {
+            .slide { height: 300px; }
+            .slide h2 { font-size: 2em; }
+        }
+
+        /* Nav ve diğer kısımlar aynı kalıyor */
         nav {
             background: rgba(255,255,255,0.9);
             backdrop-filter: blur(10px);
@@ -68,80 +129,20 @@
             text-decoration: none;
             font-weight: 600;
         }
-        .container {
-            max-width: 1300px;
-            margin: 50px auto;
-            padding: 0 20px;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2em;
-            margin-bottom: 40px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-        }
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.4s ease;
-        }
-        .card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-        .card-img {
-            height: 200px;
-            background: #ddd;
-            background-size: cover;
-            background-position: center;
-        }
-        .card-content {
-            padding: 25px;
-        }
-        .card h3 {
-            margin: 0 0 15px;
-            font-size: 1.4em;
-        }
-        .card h3 a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-        .card p {
-            color: #555;
-            margin: 10px 0;
-        }
-        .meta {
-            font-size: 0.95em;
-            color: #888;
-            margin: 15px 0;
-        }
-        .download-btn {
-            display: block;
-            background: var(--success);
-            color: white;
-            text-align: center;
-            padding: 14px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .download-btn:hover {
-            background: #05b583;
-            transform: scale(1.02);
-        }
-        footer {
-            text-align: center;
-            padding: 50px;
-            color: #666;
-            font-size: 0.9em;
-        }
+
+        .container { max-width: 1300px; margin: 50px auto; padding: 0 20px; }
+        .section-title { text-align: center; font-size: 2em; margin-bottom: 40px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        .card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); transition: all 0.4s; }
+        .card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .card-img { height: 200px; background-size: cover; background-position: center; }
+        .card-content { padding: 25px; }
+        .card h3 a { color: var(--primary); text-decoration: none; }
+        .meta { font-size: 0.95em; color: #888; margin: 15px 0; }
+        .download-btn { display: block; background: var(--success); color: white; text-align: center; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600; }
+        .download-btn:hover { background: #05b583; }
+
+        footer { text-align: center; padding: 50px; color: #666; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -154,6 +155,44 @@
     </div>
 </header>
 
+<!-- YENİ: Slider -->
+<div class="slider-container">
+    <div class="slider">
+        <!-- Slayt 1 -->
+        <div class="slide" style="background-image: url('https://via.placeholder.com/1600x800/4361ee/ffffff?text=Google+Chrome');">
+            <div class="slide-content">
+                <h2>Google Chrome</h2>
+                <p>En hızlı ve güvenli tarayıcı şimdi yeni sürümde!</p>
+                <a href="#" class="slide-btn">Hemen İndir</a>
+            </div>
+        </div>
+        <!-- Slayt 2 -->
+        <div class="slide" style="background-image: url('https://via.placeholder.com/1600x800/06d6a0/ffffff?text=VLC+Media+Player');">
+            <div class="slide-content">
+                <h2>VLC Media Player</h2>
+                <p>Her formatı oynatan efsane medya oynatıcı</p>
+                <a href="#" class="slide-btn">Ücretsiz İndir</a>
+            </div>
+        </div>
+        <!-- Slayt 3 -->
+        <div class="slide" style="background-image: url('https://via.placeholder.com/1600x800/ff6b6b/ffffff?text=WinRAR');">
+            <div class="slide-content">
+                <h2>WinRAR 7.01</h2>
+                <p>Dosyalarınızı en iyi şekilde sıkıştırın</p>
+                <a href="#" class="slide-btn">İndir</a>
+            </div>
+        </div>
+        <!-- Slayt 4 -->
+        <div class="slide" style="background-image: url('https://via.placeholder.com/1600x800/4ecdc4/ffffff?text=Yeni+Programlar');">
+            <div class="slide-content">
+                <h2>Hergün Yeni Programlar</h2>
+                <p>En güncel yazılımlar burada sizleri bekliyor</p>
+                <a href="#" class="slide-btn">Tümünü Gör</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <nav>
     <a href="#">Ana Sayfa</a>
     <a href="#">Kategoriler</a>
@@ -165,6 +204,7 @@
 <div class="container">
     <h2 class="section-title">Yeni Eklenenler</h2>
     <div class="grid">
+        <!-- Kartlar aynı kalıyor -->
         <div class="card">
             <div class="card-img" style="background-image: url('https://via.placeholder.com/400x200?text=Chrome');"></div>
             <div class="card-content">
@@ -174,27 +214,7 @@
                 <a href="#" class="download-btn">İndir</a>
             </div>
         </div>
-
-        <div class="card">
-            <div class="card-img" style="background-image: url('https://via.placeholder.com/400x200?text=VLC');"></div>
-            <div class="card-content">
-                <h3><a href="#">VLC Media Player</a></h3>
-                <p>Her formatı oynatır.</p>
-                <div class="meta">42 MB • Ücretsiz</div>
-                <a href="#" class="download-btn">İndir</a>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-img" style="background-image: url('https://via.placeholder.com/400x200?text=WinRAR');"></div>
-            <div class="card-content">
-                <h3><a href="#">WinRAR</a></h3>
-                <p>Güçlü arşivleme aracı.</p>
-                <div class="meta">3.5 MB • Deneme</div>
-                <a href="#" class="download-btn">İndir</a>
-            </div>
-        </div>
-        <!-- Daha fazla ekle -->
+        <!-- Diğer kartlar... -->
     </div>
 </div>
 
