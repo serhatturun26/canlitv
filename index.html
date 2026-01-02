@@ -2,44 +2,147 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Program İndirme Merkezi</title>
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yazılım İndir - Program Arşivi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 { margin: 0; }
+        nav {
+            background: #34495e;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover { text-decoration: underline; }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            display: flex;
+            gap: 20px;
+        }
+        .sidebar {
+            width: 25%;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .main {
+            width: 75%;
+        }
+        .program {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .program h3 {
+            margin: 0 0 10px 0;
+        }
+        .program a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .program a:hover { text-decoration: underline; }
+        .download-btn {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
 
 <header>
-    <h1>💾 Program İndirme Merkezi</h1>
-    <p>Ücretsiz ve güvenli yazılımlar</p>
+    <h1>Yazılım İndir</h1>
+    <p>En Güncel Programlar ve Oyunlar</p>
 </header>
 
-<main class="container">
+<nav>
+    <a href="index.html">Ana Sayfa</a>
+    <a href="#">Kategoriler</a>
+    <a href="#">Yeni Eklenenler</a>
+    <a href="#">Popüler</a>
+    <a href="#">İletişim</a>
+</nav>
 
-    <div class="program">
-        <img src="https://cdn-icons-png.flaticon.com/512/732/732221.png" alt="Chrome">
-        <h2>Google Chrome</h2>
-        <p>Hızlı ve güvenli internet tarayıcısı</p>
-        <a href="https://www.google.com/chrome/" target="_blank" class="btn">İndir</a>
-    </div>
+<div class="container">
+    <aside class="sidebar">
+        <h2>Kategoriler</h2>
+        <ul style="list-style:none; padding:0;">
+            <li><a href="#">Antivirüs</a></li>
+            <li><a href="#">Ofis Programları</a></li>
+            <li><a href="#">Medya Oynatıcı</a></li>
+            <li><a href="#">İnternet Tarayıcı</a></li>
+            <li><a href="#">Oyunlar</a></li>
+            <li><a href="#">Sıkıştırma</a></li>
+            <li><a href="#">Grafik & Tasarım</a></li>
+        </ul>
 
-    <div class="program">
-        <img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" alt="VLC">
-        <h2>VLC Media Player</h2>
-        <p>Tüm video formatlarını oynatır</p>
-        <a href="https://www.videolan.org/vlc/" target="_blank" class="btn">İndir</a>
-    </div>
+        <h2 style="margin-top:30px;">Arama</h2>
+        <input type="text" placeholder="Program ara..." style="width:100%; padding:8px;">
+    </aside>
 
-    <div class="program">
-        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png" alt="WinRAR">
-        <h2>WinRAR</h2>
-        <p>Dosya sıkıştırma ve arşivleme</p>
-        <a href="https://www.win-rar.com/" target="_blank" class="btn">İndir</a>
-    </div>
+    <section class="main">
+        <h2>Yeni Eklenen Programlar</h2>
 
-</main>
+        <div class="program">
+            <h3><a href="detail.html">Google Chrome 131.0</a></h3>
+            <p>Hızlı, güvenli ve güncel internet tarayıcısı.</p>
+            <p><strong>Boyut:</strong> 98 MB | <strong>Tür:</strong> Ücretsiz | <strong>Tarih:</strong> 02.01.2026</p>
+            <a href="#" class="download-btn">İndir</a>
+        </div>
+
+        <div class="program">
+            <h3><a href="#">VLC Media Player 3.0.21</a></h3>
+            <p>Her türlü video ve ses dosyasını oynatabilen ücretsiz medya oynatıcı.</p>
+            <p><strong>Boyut:</strong> 42 MB | <strong>Tür:</strong> Ücretsiz</p>
+            <a href="#" class="download-btn">İndir</a>
+        </div>
+
+        <div class="program">
+            <h3><a href="#">WinRAR 7.01</a></h3>
+            <p>Güçlü dosya sıkıştırma ve arşivleme programı.</p>
+            <p><strong>Boyut:</strong> 3.5 MB | <strong>Tür:</strong> Deneme Sürümü</p>
+            <a href="#" class="download-btn">İndir</a>
+        </div>
+
+    </section>
+</div>
 
 <footer>
-    <p>© 2026 Program İndirme Sitesi</p>
+    <p>&copy; 2026 Yazılım İndir. Tüm hakları saklıdır.</p>
 </footer>
 
 </body>
