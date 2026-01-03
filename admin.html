@@ -10,7 +10,7 @@
         body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: var(--text); min-height: 100vh; }
         .admin-header { background: linear-gradient(135deg, var(--primary), #3f37c9); color: white; padding: 20px; text-align: center; position: relative; }
         .logout { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 50px; color: white; text-decoration: none; font-weight: 600; }
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .container { max-width: 1200px; margin: 40px auto; padding: ; }
         .dashboard { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
         .form-card, .list-card, .comments-card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); }
         input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
@@ -70,10 +70,10 @@
                     <option value="Oyunlar">Oyunlar</option>
                     <option value="Diğer">Diğer</option>
                 </select>
-                <input type="text" id="customCategory" placeholder="Özel kategori yaz..." style="display:none; margin-top:5px;">
+                <input type="text" id="customCategory" placeholder="Özel kategori yaz..." style="display:none;">
                 <input type="date" id="date" required>
                 <input type="number" id="downloads" placeholder="İndirme Sayısı (opsiyonel)" min="0" value="0">
-                <label><input type="checkbox" id="featured"> Slider'da Göster (Öne Çıkan)</label><br><br>
+                <label><input type="checkbox" id="featured"> Slider'da Göster</label><br><br>
                 <button type="submit" id="submitBtn">Program Ekle</button>
                 <button type="button" id="cancelEdit" style="display:none; background:#666;" onclick="cancelEdit()">İptal</button>
             </form>
@@ -114,7 +114,6 @@
         renderComments();
     }
 
-    // Sayfa yüklendiğinde kontrol
     if (localStorage.getItem('adminLoggedIn') === 'true') {
         showPanel();
     }
@@ -128,13 +127,18 @@
     let programs = JSON.parse(localStorage.getItem('programs')) || [];
     let comments = JSON.parse(localStorage.getItem('comments')) || [];
 
-    function savePrograms() { localStorage.setItem('programs', JSON.stringify(programs)); }
-    function saveComments() { localStorage.setItem('comments', JSON.stringify(comments)); }
+    function savePrograms() {
+        localStorage.setItem('programs', JSON.stringify(programs));
+    }
+
+    function saveComments() {
+        localStorage.setItem('comments', JSON.stringify(comments));
+    }
 
     function renderPrograms() {
         const list = document.getElementById('programList');
         if (programs.length === 0) {
-            list.innerHTML = '<p style="color:#888;">Henüz program eklenmemiş. Sol taraftan yeni program ekleyin.</p>';
+            list.innerHTML = '<p style="color:#888;">Henüz program eklenmemiş. Soldaki formu doldurup "Program Ekle" butonuna basın.</p>';
             return;
         }
         list.innerHTML = programs.map((p, i) => `
@@ -175,10 +179,125 @@
         `).join('');
     }
 
-    // Kategori toggle ve diğer tüm fonksiyonlar (editProgram, addProgramForm submit, delete vb.) önceki mesajdaki gibi aynı kalıyor.
-    // (Tam script'i önceki düzeltilmiş halinden kopyala, sadece showPanel ve render fonksiyonları güncellendi)
+    // Kategori toggle
+    document.getElementById('categorySelect').addEventListener('change', function() {
+        const custom = document.getElementById('customCategory');
+        if (this.value === 'Diğer') {
+            custom.style.display = 'block';
+        } else {
+            custom.style.display = 'none';
+            custom.value = '';
+        }
+    });
 
-    // Kısaca: Bu kodu kullan, panel artık boş kalmayacak!
+    // Form submit
+    document.getElementById('addProgramForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const index = parseInt(document.getElementById('editIndex').value);
+        let category = document.getElementById('categorySelect').value;
+        if (category === 'Diğer') {
+            category = document.getElementById('customCategory').value.trim() || 'Diğer';
+        } else if (!category) {
+            category = 'Kategorisiz';
+        }
+
+        const newProg = {
+            name: document.getElementById('name').value.trim(),
+            description: document.getElementById('description').value,
+            image: document.getElementById('image').value || `https://via.placeholder.com/400x200?text=${encodeURIComponent(document.getElementById('name').value)}`,
+            images: document.getElementById('images').value ? document.getElementById('images').value.split(',').map(u => u.trim()).filter(u => u) : [],
+            size: document.getElementById('size').value || 'Bilinmiyor',
+            license: document.getElementById('license').value || 'Ücretsiz',
+            downloadLink: document.getElementById('downloadLink').value,
+            category: category,
+            date: document.getElementById('date').value,
+            downloads: parseInt(document.getElementById('downloads').value) || 0,
+            featured: document.getElementById('featured').checked
+        };
+
+        if (index >= 0) {
+            programs[index] = newProg;
+            alert('Program güncellendi!');
+        } else {
+            programs.push(newProg);
+            alert('Program başarıyla eklendi!');
+        }
+
+        savePrograms();
+        renderPrograms();
+        cancelEdit();
+    });
+
+    function cancelEdit() {
+        document.getElementById('addProgramForm').reset();
+        document.getElementById('editIndex').value = -1;
+        document.getElementById('formTitle').textContent = 'Yeni Program Ekle';
+        document.getElementById('submitBtn').textContent = 'Program Ekle';
+        document.getElementById('cancelEdit').style.display = 'none';
+        document.getElementById('customCategory').style.display = 'none';
+        document.getElementById('categorySelect').value = '';
+    }
+
+    function editProgram(index) {
+        const p = programs[index];
+        document.getElementById('formTitle').textContent = 'Program Düzenle';
+        document.getElementById('editIndex').value = index;
+        document.getElementById('name').value = p.name;
+        document.getElementById('description').value = p.description;
+        document.getElementById('image').value = p.image;
+        document.getElementById('images').value = p.images ? p.images.join(', ') : '';
+        document.getElementById('size').value = p.size;
+        document.getElementById('license').value = p.license;
+        document.getElementById('downloadLink').value = p.downloadLink;
+        document.getElementById('date').value = p.date;
+        document.getElementById('downloads').value = p.downloads || 0;
+        document.getElementById('featured').checked = p.featured;
+
+        const predefined = ['Antivirüs', 'İnternet Tarayıcı', 'Medya Oynatıcı', 'Sıkıştırma Araçları', 'Ofis Programları', 'Grafik & Tasarım', 'Oyunlar'];
+        if (predefined.includes(p.category)) {
+            document.getElementById('categorySelect').value = p.category;
+            document.getElementById('customCategory').style.display = 'none';
+        } else if (p.category) {
+            document.getElementById('categorySelect').value = 'Diğer';
+            document.getElementById('customCategory').value = p.category;
+            document.getElementById('customCategory').style.display = 'block';
+        } else {
+            document.getElementById('categorySelect').value = '';
+            document.getElementById('customCategory').style.display = 'none';
+        }
+
+        document.getElementById('submitBtn').textContent = 'Değişiklikleri Kaydet';
+        document.getElementById('cancelEdit').style.display = 'inline-block';
+    }
+
+    function deleteProgram(index) {
+        if (confirm('Bu programı silmek istediğinize emin misiniz?')) {
+            programs.splice(index, 1);
+            savePrograms();
+            renderPrograms();
+        }
+    }
+
+    function approveComment(i) {
+        comments[i].approved = true;
+        saveComments();
+        renderComments();
+    }
+
+    function deleteComment(i) {
+        if (confirm('Bu yorumu silmek istediğinize emin misiniz?')) {
+            comments.splice(i, 1);
+            saveComments();
+            renderComments();
+        }
+    }
+
+    // Sayfa yüklendiğinde yükle
+    if (localStorage.getItem('adminLoggedIn') === 'true') {
+        renderPrograms();
+        renderComments();
+    }
 </script>
 
 </body>
