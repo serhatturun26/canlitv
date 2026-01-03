@@ -59,6 +59,7 @@
         .card-content { padding: 25px; }
         .card h3 a { color: var(--primary); text-decoration: none; font-size: 1.4em; }
         .meta { font-size: 0.95em; color: #888; margin: 15px 0; }
+        .downloads { font-size: 0.9em; color: var(--success); font-weight: bold; }
         .download-btn { display: block; background: var(--success); color: white; text-align: center; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600; }
         footer { text-align: center; padding: 50px; color: #666; font-size: 0.9em; }
     </style>
@@ -141,8 +142,19 @@
         btn.addEventListener('click', () => filterCategory(btn.getAttribute('data-cat') || 'all'));
     });
 
+    function incrementDownload(index) {
+        let programs = JSON.parse(localStorage.getItem('programs')) || [];
+        if (programs[index]) {
+            programs[index].downloads = (programs[index].downloads || 0) + 1;
+            localStorage.setItem('programs', JSON.stringify(programs));
+        }
+    }
+
     function loadPrograms() {
-        const programs = JSON.parse(localStorage.getItem('programs')) || [];
+        let programs = JSON.parse(localStorage.getItem('programs')) || [];
+        // İndirme sayısına göre sırala (en yüksek üstte)
+        programs.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
+
         const grid = document.getElementById('programGrid');
         const slider = document.getElementById('slider');
         const dotsContainer = document.getElementById('dotsContainer');
@@ -162,7 +174,7 @@
                 slide.innerHTML = `<div class="slide-content">
                     <h2>${p.name}</h2>
                     <p>${p.description.substring(0, 120)}...</p>
-                    <a href="${p.downloadLink}" target="_blank" class="slide-btn">Hemen İndir</a>
+                    <a href="\( {p.downloadLink}" target="_blank" onclick="incrementDownload( \){programs.indexOf(p)})" class="slide-btn">Hemen İndir</a>
                 </div>`;
                 slider.appendChild(slide);
 
@@ -176,7 +188,7 @@
         }
 
         // Kartlar
-        filtered.forEach((p, index) => {
+        filtered.forEach((p, i) => {
             const actualIndex = programs.indexOf(p);
             const card = document.createElement('div');
             card.className = 'card';
@@ -187,7 +199,8 @@
                     <h3><a href="detail.html?id=\( {actualIndex}"> \){p.name}</a></h3>
                     <p>${p.description.substring(0, 100)}...</p>
                     <div class="meta">${p.size} • ${p.license} • ${p.category || 'Kategorisiz'}</div>
-                    <a href="${p.downloadLink}" target="_blank" class="download-btn">İndir</a>
+                    <div class="downloads">${p.downloads || 0} indirme</div>
+                    <a href="\( {p.downloadLink}" target="_blank" onclick="incrementDownload( \){actualIndex}); event.preventDefault(); window.open(this.href, '_blank');" class="download-btn">İndir</a>
                 </div>
             `;
             grid.appendChild(card);
@@ -198,7 +211,8 @@
     }
 
     function showSlide(n) {
-        slideIndex = (n + document.querySelectorAll('.slide').length) % document.querySelectorAll('.slide').length;
+        const slides = document.querySelectorAll('.slide');
+        slideIndex = (n + slides.length) % slides.length;
         document.getElementById('slider').style.transform = `translateX(-${slideIndex * 100}%)`;
         document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === slideIndex));
     }
