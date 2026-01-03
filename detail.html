@@ -3,36 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Chrome - İndir</title>
+    <title>Program Detay - ProgIndir</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Yukarıdaki CSS'i buraya da kopyala ya da ayrı CSS dosyası yap */
-        body { font-family: Arial; background:#f4f4f4; margin:0; }
-        .container { width:90%; max-width:1000px; margin:20px auto; background:white; padding:20px; border-radius:8px; }
-        .download-big { display:block; background:#27ae60; color:white; text-align:center; padding:20px; font-size:20px; text-decoration:none; border-radius:8px; }
+        :root { --bg: #f0f2f5; --primary: #4361ee; --success: #06d6a0; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: #333; }
+        header { background: linear-gradient(135deg, var(--primary), #3f37c9); color: white; padding: 40px 20px; text-align: center; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; display: flex; gap: 40px; flex-wrap: wrap; }
+        .program-image { flex: 1; min-width: 300px; }
+        .program-image img { width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .program-info { flex: 2; min-width: 300px; }
+        .download-big { display: block; background: var(--success); color: white; text-align: center; padding: 20px; font-size: 1.5em; border-radius: 20px; text-decoration: none; margin: 30px 0; }
+        .meta { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .back-btn { display: inline-block; margin: 20px 0; color: var(--primary); text-decoration: none; }
     </style>
 </head>
 <body>
 
-<header style="background:#2c3e50; color:white; padding:20px; text-align:center;">
-    <h1>Google Chrome</h1>
+<header>
+    <h1 id="progName">Yükleniyor...</h1>
 </header>
 
 <div class="container">
-    <h2>Program Bilgileri</h2>
-    <p><strong>Sürüm:</strong> 131.0<br>
-       <strong>Boyut:</strong> 98 MB<br>
-       <strong>Lisans:</strong> Ücretsiz<br>
-       <strong>Geliştirici:</strong> Google Inc.<br>
-       <strong>Eklenme:</strong> 02.01.2026</p>
-
-    <h2>Açıklama</h2>
-    <p>Google Chrome, hızlı, güvenli ve kullanıcı dostu bir internet tarayıcısıdır. Senkronizasyon özelliği ile yer imleri, şifreler ve açık sekmeler tüm cihazlarınızda senkron olur.</p>
-
-    <a href="#" class="download-big">HEMEN İNDİR (98 MB)</a>
-
-    <h2 style="margin-top:30px;">Ekran Görüntüleri</h2>
-    <p>(Buraya gerçek sitede resimler eklenir)</p>
+    <div class="program-image">
+        <img id="progImage" src="" alt="">
+    </div>
+    <div class="program-info">
+        <div class="meta">
+            <p><strong>Boyut:</strong> <span id="progSize">-</span></p>
+            <p><strong>Lisans:</strong> <span id="progLicense">-</span></p>
+            <p><strong>Kategori:</strong> <span id="progCategory">-</span></p>
+            <p><strong>Eklenme:</strong> <span id="progDate">-</span></p>
+        </div>
+        <a href="#" id="downloadBtn" class="download-big" target="_blank">HEMEN İNDİR</a>
+        <h2>Açıklama</h2>
+        <p id="progDesc">-</p>
+        <a href="index.html" class="back-btn">← Ana Sayfaya Dön</a>
+    </div>
 </div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = parseInt(urlParams.get('id'));
+    const programs = JSON.parse(localStorage.getItem('programs')) || [];
+    if (isNaN(id) || !programs[id]) {
+        document.body.innerHTML = '<h1 style="text-align:center; margin:100px;">Program bulunamadı.</h1>';
+    } else {
+        const p = programs[id];
+        document.getElementById('progName').textContent = p.name;
+        document.getElementById('progImage').src = p.image;
+        document.getElementById('progSize').textContent = p.size;
+        document.getElementById('progLicense').textContent = p.license;
+        document.getElementById('progCategory').textContent = p.category || 'Belirtilmemiş';
+        document.getElementById('progDate').textContent = p.date;
+        document.getElementById('progDesc').innerHTML = p.description.replace(/\n/g, '<br>');
+        document.getElementById('downloadBtn').href = p.downloadLink;
+    }
+</script>
 
 </body>
 </html>
