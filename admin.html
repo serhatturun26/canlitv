@@ -28,9 +28,7 @@
         .btn-danger:hover { background: #c1121f; }
         .btn-edit { background: #4361ee; }
         .btn-edit:hover { background: #3f37c9; }
-        .btn-approve { background: #28a745; }
-        .program-item, .comment-item { background: rgba(255,255,255,0.6); padding: 15px; margin: 15px 0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-        .comment-item p { margin: 5px 0; }
+        .program-item { background: rgba(255,255,255,0.6); padding: 15px; margin: 15px 0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         #loginModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         #loginModal > div { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: var(--shadow); }
         @media (max-width: 992px) { .dashboard { grid-template-columns: 1fr; } }
@@ -60,13 +58,13 @@
 <div class="container" style="display:none;" id="panelContent">
     <div class="dashboard">
         <div class="form-card">
-            <h2 id="formTitle">Yeni Program Ekle</h2>
+            <h2>Yeni Program Ekle</h2>
             <form id="addProgramForm">
                 <input type="hidden" id="editIndex" value="-1">
                 <input type="text" id="name" placeholder="Program Adı" required>
                 <textarea id="description" rows="4" placeholder="Açıklama" required></textarea>
                 <input type="url" id="image" placeholder="Ana Resim URL (opsiyonel)">
-                <input type="text" id="images" placeholder="Ek Resimler (virgülle ayrılmış URL'ler)">
+                <input type="text" id="images" placeholder="Ek Resimler (virgülle ayrılmış)">
                 <input type="text" id="size" placeholder="Boyut (ör: 98 MB)">
                 <input type="text" id="license" placeholder="Lisans (Ücretsiz/Deneme)">
                 <input type="url" id="downloadLink" placeholder="İndirme Linki (zorunlu)" required>
@@ -85,8 +83,7 @@
                 <input type="date" id="date" required>
                 <input type="number" id="downloads" placeholder="İndirme Sayısı (opsiyonel)" min="0" value="0">
                 <label><input type="checkbox" id="featured"> Slider'da Göster</label><br><br>
-                <button type="submit" id="submitBtn">Program Ekle</button>
-                <button type="button" id="cancelEdit" style="display:none; background:#666;" onclick="cancelEdit()">İptal</button>
+                <button type="submit">Program Ekle</button>
             </form>
         </div>
 
@@ -95,15 +92,9 @@
             <div id="programList"><p style="color:#888;">Yükleniyor...</p></div>
         </div>
     </div>
-
-    <div class="comments-card" style="margin-top:40px;">
-        <h2>Yorumları Yönet</h2>
-        <div id="commentsList"><p style="color:#888;">Yükleniyor...</p></div>
-    </div>
 </div>
 
 <script>
-    // Giriş
     const correctUsername = "admin";
     const correctPassword = "12345";
 
@@ -123,7 +114,6 @@
         document.getElementById('panelHeader').style.display = 'block';
         document.getElementById('panelContent').style.display = 'block';
         renderPrograms();
-        renderComments();
     }
 
     // Sayfa yüklendiğinde
@@ -143,14 +133,9 @@
     });
 
     let programs = JSON.parse(localStorage.getItem('programs')) || [];
-    let comments = JSON.parse(localStorage.getItem('comments')) || [];
 
     function savePrograms() {
         localStorage.setItem('programs', JSON.stringify(programs));
-    }
-
-    function saveComments() {
-        localStorage.setItem('comments', JSON.stringify(comments));
     }
 
     function renderPrograms() {
@@ -164,8 +149,7 @@
                 <div>
                     <strong>${p.name}</strong><br>
                     <small>${p.size} • ${p.license} • ${p.category || 'Kategorisiz'}</small><br>
-                    <small>İndirmeler: ${p.downloads || 0 0}</small>
-                    ${p.featured ? ' <strong style="color:var(--success)">[Slider]</strong>' : ''}
+                    <small>İndirmeler: ${p.downloads || 0}</small>
                 </div>
                 <div>
                     <button class="btn-edit" onclick="editProgram(${i})">Düzenle</button>
@@ -175,47 +159,11 @@
         `).join('');
     }
 
-    function renderComments() {
-        const list = document.getElementById('commentsList');
-        if (comments.length === 0) {
-            list.innerHTML = '<p style="color:#888;">Henüz yorum yok.</p>';
-            return;
-        }
-        list.innerHTML = comments.map((c, i) => `
-            <div class="comment-item">
-                <div>
-                    <strong>${programs[c.programId] ? programs[c.programId].name : 'Silinmiş Program'}</strong><br>
-                    <small>Yorumcu: ${c.name} • ${c.date}</small>
-                    <p>${c.text}</p>
-                    <small>Durum: ${c.approved ? 'Onaylı' : 'Onay Bekliyor'}</small>
-                </div>
-                <div>
-                    ${!c.approved ? '<button class="btn-approve" onclick="approveComment(' + i + ')">Onayla</button>' : ''}
-                    <button class="btn-danger" onclick="deleteComment(' + i + ')">Sil</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Kategori toggle
-    document.addEventListener('change', function(e) {
-        if (e.target && e.target.id === 'categorySelect') {
-            const custom = document.getElementById('customCategory');
-            if (e.target.value === 'Diğer') {
-                custom.style.display = 'block';
-            } else {
-                custom.style.display = 'none';
-                custom.value = '';
-            }
-        }
-    });
-
-    // Form submit (en önemli kısım!)
+    // Form submit
     document.addEventListener('submit', function(e) {
-        if (e.target && e.target.id === 'addProgramForm') {
+        if (e.target.id === 'addProgramForm') {
             e.preventDefault();
 
-            const index = parseInt(document.getElementById('editIndex').value);
             let category = document.getElementById('categorySelect').value;
             if (category === 'Diğer') {
                 category = document.getElementById('customCategory').value.trim() || 'Diğer';
@@ -237,88 +185,29 @@
                 featured: document.getElementById('featured').checked
             };
 
-            if (index >= 0) {
-                programs[index] = newProg;
-                alert('Program güncellendi!');
-            } else {
-                programs.push(newProg);
-                alert('Program başarıyla eklendi!');
-            }
-
+            programs.push(newProg);
             savePrograms();
             renderPrograms();
-            cancelEdit();
+            alert('Program başarıyla eklendi!');
+            e.target.reset();
         }
     });
 
-    function cancelEdit() {
-        document.getElementById('addProgramForm').reset();
-        document.getElementById('editIndex').value = -1;
-        document.getElementById('formTitle').textContent = 'Yeni Program Ekle';
-        document.getElementById('submitBtn').textContent = 'Program Ekle';
-        document.getElementById('cancelEdit').style.display = 'none';
-        document.getElementById('customCategory').style.display = 'none';
-        document.getElementById('categorySelect').value = '';
+    function editProgram(i) {
+        alert('Düzenleme özelliği bu basit versiyonda yok, ama istersen ekleyebilirim!');
     }
 
-    function editProgram(index) {
-        const p = programs[index];
-        document.setElementById('formTitle').textContent = 'Program Düzenle';
-        document.getElementById('editIndex').value = index;
-        document.getElementById('name').value = p.name;
-        document.getElementById('description').value = p.description;
-        document.getElementById('image').value = p.image;
-        document.getElementById('images').value = p.images ? p.images.join(', ') : '';
-        document.getElementById('size').value = p.size;
-        document.getElementById('license').value = p.license;
-        document.getElementById('downloadLink').value = p.downloadLink;
-        document.getElementById('date').value = p.date;
-        document.getElementById('downloads').value = p.downloads || 0;
-        document.getElementById('featured').checked = p.featured;
-
-        const predefined = ['Antivirüs', 'İnternet Tarayıcı', 'Medya Oynatıcı', 'Sıkıştırma Araçları', 'Ofis Programları', 'Grafik & Tasarım', 'Oyunlar'];
-        if (predefined.includes(p.category)) {
-            document.getElementById('categorySelect').value = p.category;
-            document.getElementById('customCategory').style.display = 'none';
-        } else if (p.category) {
-            document.getElementById('categorySelect').value = 'Diğer';
-            document.getElementById('customCategory').value = p.category;
-            document.getElementById('customCategory').style.display = 'block';
-        } else {
-            document.getElementById('categorySelect').value = '';
-            document.getElementById('customCategory').style.display = 'none';
-        }
-
-        document.getElementById('submitBtn').textContent = 'Değişiklikleri Kaydet';
-        document.getElementById('cancelEdit').style.display = 'inline-block';
-    }
-
-    function deleteProgram(index) {
-        if (confirm('Bu programı silmek istediğinize emin misiniz?')) {
-            programs.splice(index, 1);
+    function deleteProgram(i) {
+        if (confirm('Silmek istediğinize emin misiniz?')) {
+            programs.splice(i, 1);
             savePrograms();
             renderPrograms();
-        }
-    }
-
-    function approveComment(i) {
-        comments[i].approved = true;
-        saveComments();
-        renderComments();
-    }
-
-    function deleteComment(i) {
-        if (confirm('Bu yorumu silmek istediğinize emin misiniz?')) {
-            comments.splice(i, 1);
-            saveComments();
-            renderComments();
         }
     }
 
     // Sayfa yüklendiğinde yükle
     if (localStorage.getItem('adminLoggedIn') === 'true') {
         renderPrograms();
-        renderComments();
     }
 </script>
 
