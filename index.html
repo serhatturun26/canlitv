@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <.meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProgIndir - Güvenilir Yazılım Arşivi</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -147,12 +147,12 @@
         if (programs[index]) {
             programs[index].downloads = (programs[index].downloads || 0) + 1;
             localStorage.setItem('programs', JSON.stringify(programs));
+            loadPrograms(); // Sayacı güncelle
         }
     }
 
     function loadPrograms() {
         let programs = JSON.parse(localStorage.getItem('programs')) || [];
-        // İndirme sayısına göre sırala (en yüksek üstte)
         programs.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
 
         const grid = document.getElementById('programGrid');
@@ -174,7 +174,7 @@
                 slide.innerHTML = `<div class="slide-content">
                     <h2>${p.name}</h2>
                     <p>${p.description.substring(0, 120)}...</p>
-                    <a href="\( {p.downloadLink}" target="_blank" onclick="incrementDownload( \){programs.indexOf(p)})" class="slide-btn">Hemen İndir</a>
+                    <a href="\( {p.downloadLink}" target="_blank" onclick="event.preventDefault(); incrementDownload( \){programs.indexOf(p)}); window.open(this.href, '_blank');" class="slide-btn">Hemen İndir</a>
                 </div>`;
                 slider.appendChild(slide);
 
@@ -200,7 +200,7 @@
                     <p>${p.description.substring(0, 100)}...</p>
                     <div class="meta">${p.size} • ${p.license} • ${p.category || 'Kategorisiz'}</div>
                     <div class="downloads">${p.downloads || 0} indirme</div>
-                    <a href="\( {p.downloadLink}" target="_blank" onclick="incrementDownload( \){actualIndex}); event.preventDefault(); window.open(this.href, '_blank');" class="download-btn">İndir</a>
+                    <a href="\( {p.downloadLink}" target="_blank" onclick="event.preventDefault(); incrementDownload( \){actualIndex}); window.open(this.href, '_blank');" class="download-btn">İndir</a>
                 </div>
             `;
             grid.appendChild(card);
