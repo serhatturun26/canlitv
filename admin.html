@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Paneli - ProgIndir</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #f0f2f5; --card-bg: rgba(255,255,255,0.8); --text: #1a1a1a; --primary: #4361ee; --success: #06d6a0; --danger: #e63946; --shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text: #1a1a1a;
+            --primary: #4361ee;
+            --success: #06d6a0;
+            --danger: #e63946;
+            --shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
         body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: var(--text); min-height: 100vh; }
         .admin-header { background: linear-gradient(135deg, var(--primary), #3f37c9); color: white; padding: 20px; text-align: center; position: relative; }
         .logout { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 50px; color: white; text-decoration: none; font-weight: 600; }
@@ -29,6 +38,7 @@
 </head>
 <body>
 
+<!-- Giriş Modalı -->
 <div id="loginModal">
     <div>
         <h2 style="color:#4361ee; margin-top:0;">Admin Girişi</h2>
@@ -39,12 +49,14 @@
     </div>
 </div>
 
+<!-- Panel Başlık -->
 <div class="admin-header" style="display:none;" id="panelHeader">
     <h1>Admin Paneli</h1>
     <p>Yeni program ekle, mevcutları yönet</p>
     <a href="index.html" class="logout">Çıkış Yap</a>
 </div>
 
+<!-- Panel İçeriği -->
 <div class="container" style="display:none;" id="panelContent">
     <div class="dashboard">
         <div class="form-card">
@@ -91,6 +103,7 @@
 </div>
 
 <script>
+    // Giriş
     const correctUsername = "admin";
     const correctPassword = "12345";
 
@@ -113,15 +126,21 @@
         renderComments();
     }
 
-    if (localStorage.getItem('adminLoggedIn') === 'true') {
-        showPanel();
-    }
+    // Sayfa yüklendiğinde
+    window.addEventListener('load', function() {
+        if (localStorage.getItem('adminLoggedIn') === 'true') {
+            showPanel();
+        }
+    });
 
-    document.querySelector('.logout').onclick = function(e) {
-        e.preventDefault();
-        localStorage.removeItem('adminLoggedIn');
-        location.reload();
-    };
+    // Çıkış
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('logout')) {
+            e.preventDefault();
+            localStorage.removeItem('adminLoggedIn');
+            location.reload();
+        }
+    });
 
     let programs = JSON.parse(localStorage.getItem('programs')) || [];
     let comments = JSON.parse(localStorage.getItem('comments')) || [];
@@ -137,7 +156,7 @@
     function renderPrograms() {
         const list = document.getElementById('programList');
         if (programs.length === 0) {
-            list.innerHTML = '<p style="color:#888;">Henüz program eklenmemiş. Soldaki formu doldurup "Program Ekle" butonuna basın.</p>';
+            list.innerHTML = '<p style="color:#888;">Henüz program eklenmemiş. Soldaki formu doldurun ve "Program Ekle" butonuna basın.</p>';
             return;
         }
         list.innerHTML = programs.map((p, i) => `
@@ -145,7 +164,7 @@
                 <div>
                     <strong>${p.name}</strong><br>
                     <small>${p.size} • ${p.license} • ${p.category || 'Kategorisiz'}</small><br>
-                    <small>İndirmeler: ${p.downloads || 0}</small>
+                    <small>İndirmeler: ${p.downloads || 0 0}</small>
                     ${p.featured ? ' <strong style="color:var(--success)">[Slider]</strong>' : ''}
                 </div>
                 <div>
@@ -179,53 +198,57 @@
     }
 
     // Kategori toggle
-    document.getElementById('categorySelect').addEventListener('change', function() {
-        const custom = document.getElementById('customCategory');
-        if (this.value === 'Diğer') {
-            custom.style.display = 'block';
-        } else {
-            custom.style.display = 'none';
-            custom.value = '';
+    document.addEventListener('change', function(e) {
+        if (e.target && e.target.id === 'categorySelect') {
+            const custom = document.getElementById('customCategory');
+            if (e.target.value === 'Diğer') {
+                custom.style.display = 'block';
+            } else {
+                custom.style.display = 'none';
+                custom.value = '';
+            }
         }
     });
 
-    // Form submit
-    document.getElementById('addProgramForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // Form submit (en önemli kısım!)
+    document.addEventListener('submit', function(e) {
+        if (e.target && e.target.id === 'addProgramForm') {
+            e.preventDefault();
 
-        const index = parseInt(document.getElementById('editIndex').value);
-        let category = document.getElementById('categorySelect').value;
-        if (category === 'Diğer') {
-            category = document.getElementById('customCategory').value.trim() || 'Diğer';
-        } else if (!category) {
-            category = 'Kategorisiz';
+            const index = parseInt(document.getElementById('editIndex').value);
+            let category = document.getElementById('categorySelect').value;
+            if (category === 'Diğer') {
+                category = document.getElementById('customCategory').value.trim() || 'Diğer';
+            } else if (!category) {
+                category = 'Kategorisiz';
+            }
+
+            const newProg = {
+                name: document.getElementById('name').value.trim(),
+                description: document.getElementById('description').value,
+                image: document.getElementById('image').value || `https://via.placeholder.com/400x200?text=${encodeURIComponent(document.getElementById('name').value)}`,
+                images: document.getElementById('images').value ? document.getElementById('images').value.split(',').map(u => u.trim()).filter(u => u) : [],
+                size: document.getElementById('size').value || 'Bilinmiyor',
+                license: document.getElementById('license').value || 'Ücretsiz',
+                downloadLink: document.getElementById('downloadLink').value,
+                category: category,
+                date: document.getElementById('date').value,
+                downloads: parseInt(document.getElementById('downloads').value) || 0,
+                featured: document.getElementById('featured').checked
+            };
+
+            if (index >= 0) {
+                programs[index] = newProg;
+                alert('Program güncellendi!');
+            } else {
+                programs.push(newProg);
+                alert('Program başarıyla eklendi!');
+            }
+
+            savePrograms();
+            renderPrograms();
+            cancelEdit();
         }
-
-        const newProg = {
-            name: document.getElementById('name').value.trim(),
-            description: document.getElementById('description').value,
-            image: document.getElementById('image').value || `https://via.placeholder.com/400x200?text=${encodeURIComponent(document.getElementById('name').value)}`,
-            images: document.getElementById('images').value ? document.getElementById('images').value.split(',').map(u => u.trim()).filter(u => u) : [],
-            size: document.getElementById('size').value || 'Bilinmiyor',
-            license: document.getElementById('license').value || 'Ücretsiz',
-            downloadLink: document.getElementById('downloadLink').value,
-            category: category,
-            date: document.getElementById('date').value,
-            downloads: parseInt(document.getElementById('downloads').value) || 0,
-            featured: document.getElementById('featured').checked
-        };
-
-        if (index >= 0) {
-            programs[index] = newProg;
-            alert('Program güncellendi!');
-        } else {
-            programs.push(newProg);
-            alert('Program başarıyla eklendi!');
-        }
-
-        savePrograms();
-        renderPrograms();
-        cancelEdit();
     });
 
     function cancelEdit() {
@@ -240,7 +263,7 @@
 
     function editProgram(index) {
         const p = programs[index];
-        document.getElementById('formTitle').textContent = 'Program Düzenle';
+        document.setElementById('formTitle').textContent = 'Program Düzenle';
         document.getElementById('editIndex').value = index;
         document.getElementById('name').value = p.name;
         document.getElementById('description').value = p.description;
