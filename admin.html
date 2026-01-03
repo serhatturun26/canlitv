@@ -14,30 +14,30 @@
         .dashboard { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
         .form-card, .list-card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); }
         input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        button { background: var(--success); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+        button { background: var(--success); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; margin: 5px; }
         button:hover { background: #05b583; }
         .btn-danger { background: var(--danger); }
         .btn-danger:hover { background: #c1121f; }
-        .program-item { background: rgba(255,255,255,0.6); padding: 15px; margin: 15px 0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-edit { background: #4361ee; }
+        .btn-edit:hover { background: #3f37c9; }
+        .program-item { background: rgba(255,255,255,0.6); padding: 15px; margin: 15px 0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         #loginModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        #loginModal > div { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: var(--shadow); }
+        #loginModal > div { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
         @media (max-width: 992px) { .dashboard { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<!-- Giriş Modalı -->
 <div id="loginModal">
     <div>
         <h2 style="color:#4361ee; margin-top:0;">Admin Girişi</h2>
-        <input type="text" id="username" placeholder="Kullanıcı adı" style="margin-bottom:15px;">
-        <input type="password" id="password" placeholder="Şifre" style="margin-bottom:20px;">
-        <button onclick="login()" style="width:100%; padding:15px;">Giriş Yap</button>
-        <p id="loginError" style="color:#e63946; margin-top:15px; display:none;">Kullanıcı adı veya şifre yanlış!</p>
+        <input type="text" id="username" placeholder="Kullanıcı adı">
+        <input type="password" id="password" placeholder="Şifre">
+        <button onclick="login()" style="margin-top:20px; width:100%; padding:15px;">Giriş Yap</button>
+        <p id="loginError" style="color:#e63946; margin-top:15px; display:none;">Yanlış kullanıcı adı veya şifre!</p>
     </div>
 </div>
 
-<!-- Panel İçeriği (giriş yapıldıktan sonra görünür) -->
 <div class="admin-header" style="display:none;" id="panelHeader">
     <h1>Admin Paneli</h1>
     <p>Yeni program ekle, mevcutları yönet</p>
@@ -47,8 +47,9 @@
 <div class="container" style="display:none;" id="panelContent">
     <div class="dashboard">
         <div class="form-card">
-            <h2>Yeni Program Ekle</h2>
+            <h2 id="formTitle">Yeni Program Ekle</h2>
             <form id="addProgramForm">
+                <input type="hidden" id="editIndex" value="-1">
                 <input type="text" id="name" placeholder="Program Adı" required>
                 <textarea id="description" rows="4" placeholder="Açıklama" required></textarea>
                 <input type="url" id="image" placeholder="Resim URL (opsiyonel)">
@@ -57,7 +58,8 @@
                 <input type="url" id="downloadLink" placeholder="İndirme Linki (zorunlu)" required>
                 <input type="date" id="date" required>
                 <label><input type="checkbox" id="featured"> Slider'da Göster (Öne Çıkan)</label><br><br>
-                <button type="submit">Program Ekle</button>
+                <button type="submit" id="submitBtn">Program Ekle</button>
+                <button type="button" id="cancelEdit" style="display:none; background:#666;" onclick="cancelEdit()">İptal</button>
             </form>
         </div>
 
@@ -69,14 +71,12 @@
 </div>
 
 <script>
-    // Şifre doğrudan tanımlı (düz metin, test için)
     const correctUsername = "admin";
     const correctPassword = "12345";
 
     function login() {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
-
         if (username === correctUsername && password === correctPassword) {
             localStorage.setItem('adminLoggedIn', 'true');
             document.getElementById('loginModal').style.display = 'none';
@@ -85,25 +85,21 @@
             renderPrograms();
         } else {
             document.getElementById('loginError').style.display = 'block';
-            document.getElementById('loginError').textContent = 'Kullanıcı adı veya şifre yanlış!';
         }
     }
 
-    // Oturum kontrolü
     if (localStorage.getItem('adminLoggedIn') === 'true') {
         document.getElementById('loginModal').style.display = 'none';
         document.getElementById('panelHeader').style.display = 'block';
         document.getElementById('panelContent').style.display = 'block';
     }
 
-    // Çıkış yap
     document.querySelector('.logout').onclick = function(e) {
         e.preventDefault();
         localStorage.removeItem('adminLoggedIn');
-        location.reload(); // Sayfayı yenile
+        location.reload();
     };
 
-    // Program işlemleri
     let programs = JSON.parse(localStorage.getItem('programs')) || [];
 
     function savePrograms() {
@@ -124,13 +120,41 @@
                     <small>Link: <a href="\( {p.downloadLink}" target="_blank" style="color:#4361ee;"> \){p.downloadLink.substring(0,50)}...</a></small>
                     ${p.featured ? ' <strong style="color:var(--success)">[Slider]</strong>' : ''}
                 </div>
-                <button class="btn-danger" onclick="deleteProgram(${i})">Sil</button>
+                <div>
+                    <button class="btn-edit" onclick="editProgram(${i})">Düzenle</button>
+                    <button class="btn-danger" onclick="deleteProgram(${i})">Sil</button>
+                </div>
             </div>
         `).join('');
     }
 
+    function editProgram(index) {
+        const p = programs[index];
+        document.getElementById('formTitle').textContent = 'Program Düzenle';
+        document.getElementById('editIndex').value = index;
+        document.getElementById('name').value = p.name;
+        document.getElementById('description').value = p.description;
+        document.getElementById('image').value = p.image;
+        document.getElementById('size').value = p.size;
+        document.getElementById('license').value = p.license;
+        document.getElementById('downloadLink').value = p.downloadLink;
+        document.getElementById('date').value = p.date;
+        document.getElementById('featured').checked = p.featured;
+        document.getElementById('submitBtn').textContent = 'Değişiklikleri Kaydet';
+        document.getElementById('cancelEdit').style.display = 'inline-block';
+    }
+
+    function cancelEdit() {
+        document.getElementById('addProgramForm').reset();
+        document.getElementById('editIndex').value = -1;
+        document.getElementById('formTitle').textContent = 'Yeni Program Ekle';
+        document.getElementById('submitBtn').textContent = 'Program Ekle';
+        document.getElementById('cancelEdit').style.display = 'none';
+    }
+
     document.getElementById('addProgramForm').addEventListener('submit', function(e) {
         e.preventDefault();
+        const index = parseInt(document.getElementById('editIndex').value);
         const newProg = {
             name: document.getElementById('name').value,
             description: document.getElementById('description').value,
@@ -141,11 +165,17 @@
             date: document.getElementById('date').value,
             featured: document.getElementById('featured').checked
         };
-        programs.push(newProg);
+
+        if (index >= 0) {
+            programs[index] = newProg;
+            alert('Program güncellendi!');
+        } else {
+            programs.push(newProg);
+            alert('Program eklendi!');
+        }
         savePrograms();
         renderPrograms();
-        this.reset();
-        alert('Program başarıyla eklendi!');
+        cancelEdit();
     });
 
     function deleteProgram(index) {
@@ -156,7 +186,6 @@
         }
     }
 
-    // Giriş yapıldıysa listeyi yükle
     if (localStorage.getItem('adminLoggedIn') === 'true') {
         renderPrograms();
     }
