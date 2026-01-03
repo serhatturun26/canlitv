@@ -12,7 +12,7 @@
         .logout { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 50px; color: white; text-decoration: none; font-weight: 600; }
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
         .dashboard { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
-        .form-card, .list-card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); }
+        .form-card, .list-card, .comments-card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); }
         input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
         button { background: var(--success); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; margin: 5px; }
         button:hover { background: #05b583; }
@@ -20,7 +20,10 @@
         .btn-danger:hover { background: #c1121f; }
         .btn-edit { background: #4361ee; }
         .btn-edit:hover { background: #3f37c9; }
-        .program-item { background: rgba(255,255,255,0.6); padding: 15px; margin: 15px 0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .btn-approve { background: #28a745; }
+        .btn-approve:hover { background: #218838; }
+        .program-item, .comment-item { background: rgba(255,255,255,0.6); padding: 15px; margin: 15px 0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .comment-item p { margin: 5px 0; }
         #loginModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         #loginModal > div { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
         @media (max-width: 992px) { .dashboard { grid-template-columns: 1fr; } }
@@ -52,11 +55,25 @@
                 <input type="hidden" id="editIndex" value="-1">
                 <input type="text" id="name" placeholder="Program Adı" required>
                 <textarea id="description" rows="4" placeholder="Açıklama" required></textarea>
-                <input type="url" id="image" placeholder="Resim URL (opsiyonel)">
+                <input type="url" id="image" placeholder="Ana Resim URL (opsiyonel)">
+                <input type="text" id="images" placeholder="Ek Resimler (virgülle ayrılmış URL'ler)">
                 <input type="text" id="size" placeholder="Boyut (ör: 98 MB)">
                 <input type="text" id="license" placeholder="Lisans (Ücretsiz/Deneme)">
                 <input type="url" id="downloadLink" placeholder="İndirme Linki (zorunlu)" required>
+                <select id="categorySelect" onchange="toggleCustomCategory()">
+                    <option value="">Kategori Seç</option>
+                    <option value="Antivirüs">Antivirüs</option>
+                    <option value="İnternet Tarayıcı">İnternet Tarayıcı</option>
+                    <option value="Medya Oynatıcı">Medya Oynatıcı</option>
+                    <option value="Sıkıştırma Araçları">Sıkıştırma Araçları</option>
+                    <option value="Ofis Programları">Ofis Programları</option>
+                    <option value="Grafik & Tasarım">Grafik & Tasarım</option>
+                    <option value="Oyunlar">Oyunlar</option>
+                    <option value="Diğer">Diğer (Aşağıya Yaz)</option>
+                </select>
+                <input type="text" id="customCategory" placeholder="Özel kategori yaz..." style="display:none; margin-top:5px;">
                 <input type="date" id="date" required>
+                <input type="number" id="downloads" placeholder="İndirme Sayısı (opsiyonel)" min="0" value="0">
                 <label><input type="checkbox" id="featured"> Slider'da Göster (Öne Çıkan)</label><br><br>
                 <button type="submit" id="submitBtn">Program Ekle</button>
                 <button type="button" id="cancelEdit" style="display:none; background:#666;" onclick="cancelEdit()">İptal</button>
@@ -67,6 +84,11 @@
             <h2>Mevcut Programlar</h2>
             <div id="programList">Yükleniyor...</div>
         </div>
+    </div>
+
+    <div class="comments-card" style="margin-top:40px;">
+        <h2>Yorumları Yönet</h2>
+        <div id="commentsList">Yükleniyor...</div>
     </div>
 </div>
 
@@ -83,6 +105,7 @@
             document.getElementById('panelHeader').style.display = 'block';
             document.getElementById('panelContent').style.display = 'block';
             renderPrograms();
+            renderComments();
         } else {
             document.getElementById('loginError').style.display = 'block';
         }
@@ -101,9 +124,14 @@
     };
 
     let programs = JSON.parse(localStorage.getItem('programs')) || [];
+    let comments = JSON.parse(localStorage.getItem('comments')) || [];
 
     function savePrograms() {
         localStorage.setItem('programs', JSON.stringify(programs));
+    }
+
+    function saveComments() {
+        localStorage.setItem('comments', JSON.stringify(comments));
     }
 
     function renderPrograms() {
@@ -116,8 +144,10 @@
             <div class="program-item">
                 <div>
                     <strong>${p.name}</strong><br>
-                    <small>${p.size} • ${p.license} • ${p.date}</small><br>
-                    <small>Link: <a href="\( {p.downloadLink}" target="_blank" style="color:#4361ee;"> \){p.downloadLink.substring(0,50)}...</a></small>
+                    <small>${p.size} • ${p.license} • ${p.category || 'Kategorisiz'}</small><br>
+                    <small>Link: <a href="\( {p.downloadLink}" target="_blank" style="color:#4361ee;"> \){p.downloadLink.substring(0,50)}...</a></small><br>
+                    <small>İndirmeler: ${p.downloads || 0}</small><br>
+                    <small>Resimler: ${p.images ? p.images.length : 1}</small>
                     ${p.featured ? ' <strong style="color:var(--success)">[Slider]</strong>' : ''}
                 </div>
                 <div>
@@ -128,6 +158,13 @@
         `).join('');
     }
 
+    function toggleCustomCategory() {
+        const select = document.getElementById('categorySelect');
+        const custom = document.getElementById('customCategory');
+        custom.style.display = select.value === 'Diğer' ? 'block' : 'none';
+        if (select.value !== 'Diğer') custom.value = '';
+    }
+
     function editProgram(index) {
         const p = programs[index];
         document.getElementById('formTitle').textContent = 'Program Düzenle';
@@ -135,10 +172,15 @@
         document.getElementById('name').value = p.name;
         document.getElementById('description').value = p.description;
         document.getElementById('image').value = p.image;
+        document.getElementById('images').value = p.images ? p.images.join(', ') : '';
         document.getElementById('size').value = p.size;
         document.getElementById('license').value = p.license;
         document.getElementById('downloadLink').value = p.downloadLink;
+        document.getElementById('categorySelect').value = p.category || '';
+        document.getElementById('customCategory').value = p.category && !['Antivirüs', 'İnternet Tarayıcı', 'Medya Oynatıcı', 'Sıkıştırma Araçları', 'Ofis Programları', 'Grafik & Tasarım', 'Oyunlar'].includes(p.category) ? p.category : '';
+        toggleCustomCategory();
         document.getElementById('date').value = p.date;
+        document.getElementById('downloads').value = p.downloads || 0;
         document.getElementById('featured').checked = p.featured;
         document.getElementById('submitBtn').textContent = 'Değişiklikleri Kaydet';
         document.getElementById('cancelEdit').style.display = 'inline-block';
@@ -150,19 +192,27 @@
         document.getElementById('formTitle').textContent = 'Yeni Program Ekle';
         document.getElementById('submitBtn').textContent = 'Program Ekle';
         document.getElementById('cancelEdit').style.display = 'none';
+        document.getElementById('customCategory').style.display = 'none';
     }
 
     document.getElementById('addProgramForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const index = parseInt(document.getElementById('editIndex').value);
+        const category = document.getElementById('categorySelect').value === 'Diğer' ? 
+            document.getElementById('customCategory').value.trim() || 'Diğer' : 
+            document.getElementById('categorySelect').value || 'Kategorisiz';
+
         const newProg = {
             name: document.getElementById('name').value,
             description: document.getElementById('description').value,
             image: document.getElementById('image').value || `https://via.placeholder.com/400x200?text=${encodeURIComponent(document.getElementById('name').value)}`,
+            images: document.getElementById('images').value ? document.getElementById('images').value.split(',').map(u => u.trim()) : [],
             size: document.getElementById('size').value || 'Bilinmiyor',
             license: document.getElementById('license').value || 'Ücretsiz',
             downloadLink: document.getElementById('downloadLink').value,
+            category: category,
             date: document.getElementById('date').value,
+            downloads: parseInt(document.getElementById('downloads').value) || 0,
             featured: document.getElementById('featured').checked
         };
 
@@ -181,13 +231,56 @@
     function deleteProgram(index) {
         if (confirm('Bu programı silmek istediğinizden emin misiniz?')) {
             programs.splice(index, 1);
+            // İlgili yorumları sil
+            comments = comments.filter(c => c.programId !== index);
+            saveComments();
             savePrograms();
             renderPrograms();
+            renderComments();
+        }
+    }
+
+    // Yorum Yönetimi
+    function renderComments() {
+        const list = document.getElementById('commentsList');
+        if (comments.length === 0) {
+            list.innerHTML = '<p style="color:#888;">Henüz yorum yok.</p>';
+            return;
+        }
+        list.innerHTML = comments.map((c, i) => `
+            <div class="comment-item">
+                <div>
+                    <strong>${programs[c.programId] ? programs[c.programId].name : 'Silinmiş Program'}</strong><br>
+                    <small>Yorumcu: ${c.name}</small><br>
+                    <p>${c.text}</p>
+                    <small>Tarih: ${c.date}</small><br>
+                    <small>Durum: ${c.approved ? 'Onaylı' : 'Bekliyor'}</small>
+                </div>
+                <div>
+                    ${!c.approved ? '<button class="btn-approve" onclick="approveComment(' + i + ')">Onayla</button>' : ''}
+                    <button class="btn-danger" onclick="deleteComment(' + i + ')">Sil</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function approveComment(index) {
+        comments[index].approved = true;
+        saveComments();
+        renderComments();
+    }
+
+    function deleteComment(index) {
+        if (confirm('Bu yorumu silmek istediğinizden emin misiniz?')) {
+            comments.splice(index, 1);
+            saveComments();
+            renderComments();
         }
     }
 
     if (localStorage.getItem('adminLoggedIn') === 'true') {
         renderPrograms();
+        renderComments();
     }
 </script>
 
