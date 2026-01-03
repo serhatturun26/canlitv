@@ -10,8 +10,13 @@
         body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: #333; }
         header { background: linear-gradient(135deg, var(--primary), #3f37c9); color: white; padding: 40px 20px; text-align: center; }
         .container { max-width: 1200px; margin: 40px auto; padding: 20px; display: flex; gap: 40px; flex-wrap: wrap; }
-        .program-image { flex: 1; min-width: 300px; }
-        .program-image img { width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .program-gallery { flex: 1; min-width: 300px; position: relative; }
+        .gallery-slider { display: flex; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .gallery-slide { min-width: 100%; transition: transform 0.5s; }
+        .gallery-slide img { width: 100%; height: auto; display: block; }
+        .gallery-prev, .gallery-next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; font-size: 1.5em; cursor: pointer; }
+        .gallery-prev { left: 10px; }
+        .gallery-next { right: 10px; }
         .program-info { flex: 2; min-width: 300px; }
         .download-big { display: block; background: var(--success); color: white; text-align: center; padding: 20px; font-size: 1.5em; border-radius: 20px; text-decoration: none; margin: 30px 0; }
         .meta { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -25,8 +30,10 @@
 </header>
 
 <div class="container">
-    <div class="program-image">
-        <img id="progImage" src="" alt="">
+    <div class="program-gallery">
+        <div class="gallery-slider" id="gallerySlider"></div>
+        <button class="gallery-prev" onclick="changeGallerySlide(-1)">&#10094;</button>
+        <button class="gallery-next" onclick="changeGallerySlide(1)">&#10095;</button>
     </div>
     <div class="program-info">
         <div class="meta">
@@ -34,6 +41,7 @@
             <p><strong>Lisans:</strong> <span id="progLicense">-</span></p>
             <p><strong>Kategori:</strong> <span id="progCategory">-</span></p>
             <p><strong>Eklenme:</strong> <span id="progDate">-</span></p>
+            <p><strong>İndirmeler:</strong> <span id="progDownloads">0</span></p>
         </div>
         <a href="#" id="downloadBtn" class="download-big" target="_blank">HEMEN İNDİR</a>
         <h2>Açıklama</h2>
@@ -51,13 +59,29 @@
     } else {
         const p = programs[id];
         document.getElementById('progName').textContent = p.name;
-        document.getElementById('progImage').src = p.image;
         document.getElementById('progSize').textContent = p.size;
         document.getElementById('progLicense').textContent = p.license;
         document.getElementById('progCategory').textContent = p.category || 'Belirtilmemiş';
         document.getElementById('progDate').textContent = p.date;
+        document.getElementById('progDownloads').textContent = p.downloads || 0;
         document.getElementById('progDesc').innerHTML = p.description.replace(/\n/g, '<br>');
         document.getElementById('downloadBtn').href = p.downloadLink;
+
+        // Galeri
+        const gallerySlider = document.getElementById('gallerySlider');
+        const images = p.images && p.images.length > 0 ? p.images : [p.image];
+        images.forEach(img => {
+            const slide = document.createElement('div');
+            slide.className = 'gallery-slide';
+            slide.innerHTML = `<img src="\( {img}" alt=" \){p.name}">`;
+            gallerySlider.appendChild(slide);
+        });
+
+        let galleryIndex = 0;
+        function changeGallerySlide(n) {
+            galleryIndex = (galleryIndex + n + images.length) % images.length;
+            gallerySlider.style.transform = `translateX(-${galleryIndex * 100}%)`;
+        }
     }
 </script>
 
