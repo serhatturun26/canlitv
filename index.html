@@ -2,110 +2,95 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
+<title>HTML Sanal Telefon</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sanal Telefon</title>
 
 <style>
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #1e1e1e;
-    font-family: Arial, sans-serif;
+body{
+    background:#121212;
+    color:#fff;
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
-
-.phone {
-    width: 300px;
-    background: #111;
-    border-radius: 25px;
-    padding: 20px;
-    box-shadow: 0 0 25px rgba(0,0,0,0.8);
+.box{
+    width:360px;
+    background:#1e1e1e;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
 }
-
-.screen {
-    height: 60px;
-    background: #000;
-    color: #0f0;
-    font-size: 22px;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    text-align: right;
-    overflow-x: auto;
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#4285f4;
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
 }
-
-.keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-}
-
-button {
-    height: 55px;
-    font-size: 20px;
-    border: none;
-    border-radius: 50%;
-    background: #333;
-    color: #fff;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #555;
-}
-
-.call {
-    background: green;
-}
-
-.delete {
-    background: crimson;
+.phone{
+    margin-top:15px;
+    background:#000;
+    padding:15px;
+    border-radius:10px;
+    display:none;
 }
 </style>
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body>
 
-<div class="phone">
-    <div id="screen" class="screen"></div>
+<div class="box">
+    <h2>📱 Sanal Telefon</h2>
 
-    <div class="keypad">
-        <button onclick="press('1')">1</button>
-        <button onclick="press('2')">2</button>
-        <button onclick="press('3')">3</button>
-        <button onclick="press('4')">4</button>
-        <button onclick="press('5')">5</button>
-        <button onclick="press('6')">6</button>
-        <button onclick="press('7')">7</button>
-        <button onclick="press('8')">8</button>
-        <button onclick="press('9')">9</button>
-        <button onclick="press('*')">*</button>
-        <button onclick="press('0')">0</button>
-        <button onclick="press('#')">#</button>
-
-        <button class="call" onclick="call()">📞</button>
-        <button class="delete" onclick="del()">⌫</button>
+    <!-- Gmail Login -->
+    <div id="g_id_onload"
+         data-client_id="GOOGLE_CLIENT_ID"
+         data-callback="onLogin">
     </div>
+
+    <div class="g_id_signin" data-type="standard"></div>
+
+    <!-- Telefon -->
+    <div id="phone" class="phone"></div>
 </div>
 
 <script>
-let screen = document.getElementById("screen");
-
-function press(value) {
-    screen.textContent += value;
-}
-
-function del() {
-    screen.textContent = screen.textContent.slice(0, -1);
-}
-
-function call() {
-    if (screen.textContent === "") {
-        alert("Numara giriniz");
-    } else {
-        alert("Aranıyor: " + screen.textContent);
+// DEVICE ID (MAC yerine)
+function getDeviceId(){
+    let id = localStorage.getItem("device_id");
+    if(!id){
+        id = crypto.randomUUID();
+        localStorage.setItem("device_id", id);
     }
+    return id;
+}
+
+// IP ADRESİ OKUMA
+fetch("https://api.ipify.org?format=json")
+.then(res => res.json())
+.then(data => window.userIP = data.ip);
+
+// Gmail callback
+function onLogin(response){
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+
+    document.getElementById("phone").style.display = "block";
+    document.getElementById("phone").innerHTML = `
+        <p><b>Email:</b> ${payload.email}</p>
+        <p><b>Ad:</b> ${payload.name}</p>
+        <p><b>IP:</b> ${window.userIP}</p>
+        <p><b>Device ID:</b> ${getDeviceId()}</p>
+        <hr>
+        <p>📞 Sanal Telefon Hazır</p>
+    `;
 }
 </script>
 
