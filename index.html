@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanal Telefon</title>
+
+<style>
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #1e1e1e;
+    font-family: Arial, sans-serif;
+}
+
+.phone {
+    width: 300px;
+    background: #111;
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.8);
+}
+
+.screen {
+    height: 60px;
+    background: #000;
+    color: #0f0;
+    font-size: 22px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    text-align: right;
+    overflow-x: auto;
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+button {
+    height: 55px;
+    font-size: 20px;
+    border: none;
+    border-radius: 50%;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #555;
+}
+
+.call {
+    background: green;
+}
+
+.delete {
+    background: crimson;
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+    <div id="screen" class="screen"></div>
+
+    <div class="keypad">
+        <button onclick="press('1')">1</button>
+        <button onclick="press('2')">2</button>
+        <button onclick="press('3')">3</button>
+        <button onclick="press('4')">4</button>
+        <button onclick="press('5')">5</button>
+        <button onclick="press('6')">6</button>
+        <button onclick="press('7')">7</button>
+        <button onclick="press('8')">8</button>
+        <button onclick="press('9')">9</button>
+        <button onclick="press('*')">*</button>
+        <button onclick="press('0')">0</button>
+        <button onclick="press('#')">#</button>
+
+        <button class="call" onclick="call()">📞</button>
+        <button class="delete" onclick="del()">⌫</button>
+    </div>
+</div>
+
+<script>
+let screen = document.getElementById("screen");
+
+function press(value) {
+    screen.textContent += value;
+}
+
+function del() {
+    screen.textContent = screen.textContent.slice(0, -1);
+}
+
+function call() {
+    if (screen.textContent === "") {
+        alert("Numara giriniz");
+    } else {
+        alert("Aranıyor: " + screen.textContent);
+    }
+}
+</script>
+
+</body>
+</html>
